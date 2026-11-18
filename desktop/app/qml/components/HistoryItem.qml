@@ -62,11 +62,14 @@ Item {
 
     Item {
         id: icon
+        clip: Theme.squareImages
         x: 4; y: 10
         width: 28; height: 28
         Image {
             id: image
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: parent.width * Theme.imageZoom
+            height: parent.height * Theme.imageZoom
             source: item.iconUrl
             sourceSize: Qt.size(56, 56)
             smooth: true

@@ -73,7 +73,7 @@ Sheet {
             radius: Theme.graphite ? Theme.radiusSm : height / 2
             color: Theme.graphite ? "transparent" : Theme.surfaceContainerHighest
             border.width: search.activeFocus ? 2 : (Theme.graphite ? 1 : 0)
-            border.color: search.activeFocus ? Theme.primary : Theme.outlineVariant
+            border.color: search.activeFocus ? Theme.inputFocus : Theme.inputBorder
             Icon {
                 id: searchIcon
                 anchors.left: parent.left
@@ -92,7 +92,7 @@ Sheet {
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: Theme.fontUi
                 font.pixelSize: 14
-                color: Theme.surfaceContent
+                color: Theme.inputContent
                 selectionColor: Theme.primaryContainer
                 selectedTextColor: Theme.primaryContainerContent
                 clip: true

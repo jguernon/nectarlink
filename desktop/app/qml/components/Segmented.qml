@@ -60,7 +60,7 @@ Rectangle {
             anchors.bottomMargin: 2
             width: 16
             height: 3
-            radius: 1.5
+            radius: Theme.corner(1.5)
             color: Theme.primary
         }
         Behavior on x {

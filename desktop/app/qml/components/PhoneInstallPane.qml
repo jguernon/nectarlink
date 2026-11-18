@@ -110,7 +110,7 @@ Column {
                         model: Math.max(0, Math.floor(cable.width / 12))
                         Rectangle {
                             width: 6; height: 6
-                            radius: 3
+                            radius: Theme.corner(3)
                             anchors.verticalCenter: parent.verticalCenter
                             color: pane.phoneReady ? Theme.primary : Theme.outlineVariant
                             Behavior on color { ColorAnimation { duration: Theme.fadeNormal } }
@@ -119,7 +119,7 @@ Column {
                 }
                 Rectangle {
                     width: 12; height: 12
-                    radius: 6
+                    radius: Theme.corner(6)
                     color: Theme.primary
                     anchors.verticalCenter: parent.verticalCenter
                     visible: travel.running
@@ -373,7 +373,7 @@ Column {
         Rectangle {
             id: dot
             width: 30; height: 30
-            radius: 15
+            radius: Theme.corner(15)
             color: step.done ? Theme.primary : step.current ? Theme.primaryContainer : Theme.surfaceContainerHigh
             border.width: step.done || step.current ? 0 : 1
             border.color: Theme.outlineVariant
@@ -409,12 +409,12 @@ Column {
             y: dot.height + 4
             width: 2
             height: step.height - dot.height - 8
-            radius: 1
+            radius: Theme.corner(1)
             color: Theme.outlineVariant
             Rectangle {
                 width: parent.width
                 height: step.done ? parent.height : 0
-                radius: 1
+                radius: Theme.corner(1)
                 color: Theme.primary
                 Behavior on height { NumberAnimation { duration: pane.motion ? 360 : 0; easing.type: Easing.OutCubic } }
             }
@@ -446,7 +446,7 @@ Column {
         property real value: 0
         property bool indeterminate: false
         height: 6
-        radius: 3
+        radius: Theme.corner(3)
         color: Theme.surfaceContainerHigh
         clip: true
         Rectangle {
@@ -676,7 +676,7 @@ Column {
                 Rectangle {
                     id: doneBadge
                     width: 34; height: 34
-                    radius: 17
+                    radius: Theme.corner(17)
                     color: Theme.primary
                     Icon {
                         anchors.centerIn: parent

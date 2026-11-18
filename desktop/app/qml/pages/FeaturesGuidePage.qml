@@ -692,7 +692,7 @@ Item {
                 radius: Theme.radiusMd
                 color: Theme.surfaceContainerLow
                 border.width: searchInput.activeFocus ? 2 : 1
-                border.color: searchInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: searchInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                 RowLayout {
                     anchors.fill: parent
@@ -710,7 +710,7 @@ Item {
                     TextInput {
                         id: searchInput
                         Layout.fillWidth: true
-                        color: Theme.surfaceContent
+                        color: Theme.inputContent
                         font.family: Theme.fontUi
                         font.pixelSize: 13
                         selectByMouse: true
@@ -753,7 +753,7 @@ Item {
                         width: chipText.implicitWidth + 24
                         implicitWidth: chipText.implicitWidth + 24
                         implicitHeight: 30
-                        radius: 15
+                        radius: Theme.corner(15)
                         color: selected ? Theme.secondaryContainer : Theme.surfaceContainerLow
                         border.width: 1
                         border.color: selected ? Theme.primary : Theme.outlineVariant
@@ -1084,7 +1084,7 @@ Item {
                         readonly property bool activeTab: guide.activeDocKey === modelData.key
                         implicitWidth: tabTxt.implicitWidth + 20
                         implicitHeight: 28
-                        radius: 14
+                        radius: Theme.corner(14)
                         color: activeTab
                             ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.16)
                             : Theme.surfaceContainerLow

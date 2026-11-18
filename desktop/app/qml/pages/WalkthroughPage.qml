@@ -301,7 +301,7 @@ FocusScope {
                         Layout.preferredHeight: 6
                         implicitWidth: 64
                         implicitHeight: 6
-                        radius: 3
+                        radius: Theme.corner(3)
                         color: index < walkthrough.step
                             ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.55)
                             : (index === walkthrough.step ? Theme.primary : Theme.surfaceContainerHighest)
@@ -765,7 +765,7 @@ FocusScope {
                                                 implicitWidth: 34
                                                 implicitHeight: 34
                                                 Layout.alignment: Qt.AlignTop
-                                                radius: 10
+                                                radius: Theme.corner(10)
                                                 color: Theme.primaryContainer
 
                                                 Icon {
@@ -894,7 +894,7 @@ FocusScope {
                                             implicitWidth: 34
                                             implicitHeight: 34
                                             Layout.alignment: Qt.AlignTop
-                                            radius: 10
+                                            radius: Theme.corner(10)
                                             color: Theme.primaryContainer
 
                                             Icon {
@@ -1193,7 +1193,7 @@ FocusScope {
                                                     Layout.preferredHeight: 8
                                                     implicitWidth: 8
                                                     implicitHeight: 8
-                                                    radius: 4
+                                                    radius: Theme.corner(4)
                                                     color: Theme.primary
                                                 }
 
@@ -1254,7 +1254,7 @@ FocusScope {
                                                     Layout.preferredHeight: 8
                                                     implicitWidth: 8
                                                     implicitHeight: 8
-                                                    radius: 4
+                                                    radius: Theme.corner(4)
                                                     color: "transparent"
                                                     border.width: 1.5
                                                     border.color: Theme.surfaceContentVariant
@@ -1455,7 +1455,7 @@ FocusScope {
                                         Layout.preferredHeight: 34
                                         implicitWidth: 34
                                         implicitHeight: 34
-                                        radius: 10
+                                        radius: Theme.corner(10)
                                         color: Theme.primaryContainer
 
                                         Icon {
@@ -1539,7 +1539,7 @@ FocusScope {
                                         Layout.preferredHeight: 34
                                         implicitWidth: 34
                                         implicitHeight: 34
-                                        radius: 10
+                                        radius: Theme.corner(10)
                                         color: Theme.primaryContainer
 
                                         Icon {
@@ -1605,7 +1605,7 @@ FocusScope {
                                             Layout.preferredHeight: 34
                                             implicitWidth: 34
                                             implicitHeight: 34
-                                            radius: 10
+                                            radius: Theme.corner(10)
                                             color: Theme.primaryContainer
 
                                             Icon {
@@ -1703,7 +1703,7 @@ FocusScope {
                                             implicitWidth: 34
                                             implicitHeight: 34
                                             Layout.alignment: Qt.AlignTop
-                                            radius: 10
+                                            radius: Theme.corner(10)
                                             color: Theme.primaryContainer
 
                                             Icon {

@@ -335,7 +335,7 @@ Item {
                         id: hiveSample
                         anchors.verticalCenter: parent.verticalCenter
                         width: 56; height: 56
-                        radius: 14
+                        radius: Theme.corner(14)
                         color: Theme.dark ? "#121214" : "#FFF8F3"
                         border.width: 1
                         border.color: Theme.dark ? Qt.rgba(1.0, 0.73, 0.37, 0.24) : Qt.rgba(0.54, 0.32, 0.0, 0.20)
@@ -774,7 +774,8 @@ Item {
                             : phonePalette
                             ? Qt.color(phonePalette.primary)
                             : (home.accent && home.accent.length > 0 ? Qt.color(home.accent) : Theme.primary)
-                        readonly property color frameFill: Theme.hive
+                        readonly property color frameFill: Theme.custom ? Theme.surface
+                            : Theme.hive
                             ? (Theme.dark ? "#0E0E10" : "#2A2420")
                             : Theme.graphite
                             ? (Theme.dark ? "#1B1D21" : "#282B30")
@@ -782,12 +783,14 @@ Item {
                         readonly property color frameStroke: Theme.graphite
                             ? Theme.outline
                             : Qt.rgba(Theme.heroContent.r, Theme.heroContent.g, Theme.heroContent.b, 0.42)
-                        readonly property color screenTop: Theme.hive
+                        readonly property color screenTop: Theme.custom ? Theme.surface
+                            : Theme.hive
                             ? (Theme.dark ? "#3A2709" : "#FFE2BC")
                             : Theme.graphite
                             ? (Theme.dark ? "#262930" : "#E4E7EC")
                             : (Theme.dark ? Qt.darker(seedColor, 1.85) : Qt.lighter(seedColor, 1.35))
-                        readonly property color screenBottom: Theme.hive
+                        readonly property color screenBottom: Theme.custom ? Theme.surface
+                            : Theme.hive
                             ? (Theme.dark ? "#141210" : "#F1C27F")
                             : Theme.graphite
                             ? (Theme.dark ? "#17191D" : "#CFD4DC")
@@ -816,9 +819,13 @@ Item {
                             anchors.centerIn: parent
                             width: parent.width + 18
                             height: parent.height + 18
-                            radius: Math.max(phoneArt.rTl, phoneArt.rTr) + 9
-                            color: Theme.graphite ? Theme.primary : phoneArt.seedColor
-                            opacity: home.online ? (Theme.dark ? 0.24 : 0.18) : 0.0
+                            radius: Theme.custom ? Math.min(Theme.radiusXl, Math.max(phoneArt.rTl, phoneArt.rTr) + 9)
+                                : Math.max(phoneArt.rTl, phoneArt.rTr) + 9
+                            // A custom theme's highlight draws a crisp outline instead of a wash.
+                            color: Theme.hasHighlight ? "transparent" : Theme.graphite ? Theme.primary : phoneArt.seedColor
+                            border.width: Theme.hasHighlight ? 2 : 0
+                            border.color: Theme.highlight
+                            opacity: home.online ? (Theme.hasHighlight ? 1 : (Theme.dark ? 0.24 : 0.18)) : 0.0
                             visible: opacity > 0
                             Behavior on opacity {
                                 enabled: home.canAnimateHero
@@ -908,7 +915,7 @@ Item {
                             visible: phoneArt.cutoutSvg.length === 0
                             width: 5
                             height: 5
-                            radius: 2.5
+                            radius: Theme.corner(2.5)
                             anchors.horizontalCenter: parent.horizontalCenter
                             y: phoneArt.bezel + 4
                             color: Qt.rgba(0, 0, 0, 0.72)
@@ -943,7 +950,7 @@ Item {
                                             width: 1.5
                                             height: 2.3 + index * 1.4
                                             anchors.bottom: parent.bottom
-                                            radius: 0.75
+                                            radius: Theme.corner(0.75)
                                             color: index < Math.min(4, Math.max(0, home.cellBars))
                                                 ? phoneArt.screenInk
                                                 : Qt.rgba(phoneArt.screenInk.r, phoneArt.screenInk.g, phoneArt.screenInk.b, 0.28)
@@ -984,6 +991,8 @@ Item {
 
                             readonly property color ringAccentColor: (home.battery <= 20 && !home.charging)
                                 ? Theme.error
+                                : Theme.custom
+                                ? (Theme.palette.success ? Theme.palette.success : Theme.success)
                                 : (home.charging ? "#4ADE80" : phoneArt.screenInk)
 
                             Item {
@@ -1063,7 +1072,7 @@ Item {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 height: 13
                                 width: Math.min(phoneArt.innerW - 6, Math.max(34, statusMiniLabel.implicitWidth + 10))
-                                radius: 6.5
+                                radius: Theme.corner(6.5)
                                 color: Qt.rgba(0, 0, 0, Theme.graphite && !Theme.dark ? 0.10 : 0.26)
                                 border.width: 0.6
                                 border.color: Qt.rgba(1, 1, 1, 0.14)
@@ -1098,7 +1107,7 @@ Item {
                             anchors.bottomMargin: phoneArt.bezel + 4
                             width: Math.round(phoneArt.innerW * 0.36)
                             height: 2.5
-                            radius: 1.25
+                            radius: Theme.corner(1.25)
                             color: Qt.rgba(phoneArt.screenInk.r, phoneArt.screenInk.g, phoneArt.screenInk.b, 0.38)
                         }
                     }
@@ -1507,7 +1516,7 @@ Item {
                                         Rectangle {
                                             width: parent.width
                                             height: 4
-                                            radius: 2
+                                            radius: Theme.corner(2)
                                             visible: queueRow.itemStatus === "sending" && queueRow.totalBytes > 0
                                             color: Theme.surfaceContainerHighest
                                             Rectangle {
@@ -2439,7 +2448,7 @@ Item {
                         radius: Theme.radiusMd
                         color: Theme.graphite ? "transparent" : Theme.surfaceContainerHigh
                         border.width: activeFocus ? 2 : 1
-                        border.color: activeFocus ? Theme.primary : Theme.outlineVariant
+                        border.color: activeFocus ? Theme.inputFocus : Theme.inputBorder
                         activeFocusOnTab: typeOnPhoneCard.activeHere
                         // Screen readers can find and focus the box the keys go through.
                         Accessible.role: Accessible.EditableText
@@ -2752,13 +2761,13 @@ Item {
                 radius: Theme.radiusMd
                 color: Theme.surfaceContainerHighest
                 border.width: nicknameInput.activeFocus ? 2 : 1
-                border.color: nicknameInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: nicknameInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                 TextInput {
                     id: nicknameInput
                     anchors.fill: parent
                     anchors.margins: 10
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     font.pixelSize: 14
                     selectByMouse: true
                     clip: true
@@ -2824,7 +2833,7 @@ Item {
                 radius: Theme.graphite ? Theme.radiusSm : height / 2
                 color: Theme.graphite ? "transparent" : Theme.surfaceContainerHighest
                 border.width: historySearch.activeFocus ? 2 : 1
-                border.color: historySearch.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: historySearch.activeFocus ? Theme.inputFocus : Theme.inputBorder
                 Icon {
                     id: searchIcon
                     anchors.left: parent.left
@@ -2847,7 +2856,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontUi
                     font.pixelSize: 14
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     clip: true
@@ -2954,7 +2963,7 @@ Item {
                 radius: Theme.graphite ? Theme.radiusSm : height / 2
                 color: Theme.graphite ? "transparent" : Theme.surfaceContainerHighest
                 border.width: clipboardSearch.activeFocus ? 2 : 1
-                border.color: clipboardSearch.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: clipboardSearch.activeFocus ? Theme.inputFocus : Theme.inputBorder
                 Icon {
                     id: clipSearchIcon
                     anchors.left: parent.left
@@ -2977,7 +2986,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontUi
                     font.pixelSize: 14
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     clip: true
@@ -3202,7 +3211,7 @@ Item {
                 Rectangle {
                     width: 56
                     height: 56
-                    radius: 16
+                    radius: Theme.corner(16)
                     color: Theme.primaryContainer
                     Icon {
                         anchors.centerIn: parent
@@ -3615,7 +3624,7 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: -3
-                radius: 6
+                radius: Theme.corner(6)
                 color: "transparent"
                 border.width: 2
                 border.color: Theme.primary
@@ -3626,7 +3635,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
                 height: 6
-                radius: 3
+                radius: Theme.corner(3)
                 color: Theme.surfaceContainerHighest
                 border.width: Theme.graphite ? 1 : 0
                 border.color: Theme.outlineVariant
@@ -3651,7 +3660,7 @@ Item {
                 visible: slider.available
                 x: Math.max(0, Math.min(barScope.width - width, sliderFill.width - width / 2))
                 anchors.verticalCenter: parent.verticalCenter
-                width: 14; height: 14; radius: 7
+                width: 14; height: 14; radius: Theme.corner(7)
                 color: Theme.graphite ? Theme.ink : Theme.primary
                 border.width: Theme.focusVisible(barScope) ? 2 : 0
                 border.color: Theme.surface

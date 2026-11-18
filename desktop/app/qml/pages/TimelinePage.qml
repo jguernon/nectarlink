@@ -143,7 +143,7 @@ Item {
                 radius: Theme.graphite ? Theme.radiusSm : height / 2
                 color: Theme.graphite ? "transparent" : Theme.surfaceContainerHigh
                 border.width: searchInput.activeFocus ? 2 : 1
-                border.color: searchInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: searchInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                 Icon {
                     id: searchIcon
@@ -162,7 +162,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.fontUi
                     font.pixelSize: 14
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     clip: true
@@ -381,7 +381,7 @@ Item {
 
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 48; height: 48; radius: 24
+            width: 48; height: 48; radius: Theme.corner(24)
             color: Theme.graphite ? "transparent" : Theme.surfaceContainerHigh
             border.width: Theme.graphite ? 1 : 0
             border.color: Theme.outlineVariant

@@ -494,28 +494,28 @@ NativeWindow {
             layer.smooth: true
 
             Rectangle {
-                width: 174; height: 174; radius: 87
+                width: 174; height: 174; radius: Theme.corner(87)
                 x: -31; y: -42
                 color: Theme.primary
                 opacity: Theme.dark ? 0.56 : 0.44
                 Behavior on color { ColorAnimation { duration: 480 } }
             }
             Rectangle {
-                width: 154; height: 154; radius: 77
+                width: 154; height: 154; radius: Theme.corner(77)
                 x: 123; y: 56
                 color: Theme.primaryContainer
                 opacity: Theme.dark ? 0.62 : 0.52
                 Behavior on color { ColorAnimation { duration: 480 } }
             }
             Rectangle {
-                width: 138; height: 138; radius: 69
+                width: 138; height: 138; radius: Theme.corner(69)
                 x: 31; y: 128
                 color: Theme.secondaryContainer
                 opacity: Theme.dark ? 0.54 : 0.46
                 Behavior on color { ColorAnimation { duration: 480 } }
             }
             Rectangle {
-                width: 108; height: 108; radius: 54
+                width: 108; height: 108; radius: Theme.corner(54)
                 x: 159; y: -15
                 color: Qt.lighter(Theme.primary, 1.35)
                 opacity: Theme.dark ? 0.34 : 0.28
@@ -788,7 +788,7 @@ NativeWindow {
                     Rectangle {
                         id: halo
                         anchors.centerIn: parent
-                        width: 10; height: 10; radius: 5
+                        width: 10; height: 10; radius: Theme.corner(5)
                         color: Theme.error
                         opacity: 0
                         SequentialAnimation on opacity {
@@ -804,7 +804,7 @@ NativeWindow {
                     }
                     Rectangle {
                         anchors.centerIn: parent
-                        width: 8; height: 8; radius: 4
+                        width: 8; height: 8; radius: Theme.corner(4)
                         color: Theme.error
                     }
                 }

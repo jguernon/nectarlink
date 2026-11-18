@@ -147,7 +147,7 @@ Sheet {
                 radius: Theme.radiusMd
                 color: Theme.surfaceContainerHighest
                 border.width: address.activeFocus ? 2 : 1
-                border.color: address.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: address.activeFocus ? Theme.inputFocus : Theme.inputBorder
                 Txt {
                     anchors.fill: parent
                     anchors.margins: 10
@@ -159,7 +159,7 @@ Sheet {
                     id: address
                     anchors.fill: parent
                     anchors.margins: 10
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     font.pixelSize: 14
                     maximumLength: 1024
                     selectByMouse: true

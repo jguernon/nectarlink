@@ -272,6 +272,19 @@ QtObject {
     // A custom theme's title bar band ("chrome"), across the top of the window.
     readonly property bool hasChrome: custom && palette.chrome !== undefined
     readonly property color chrome: hasChrome ? palette.chrome : "transparent"
+    // A custom theme's "highlight": what's live (the connected phone's outline).
+    readonly property bool hasHighlight: custom && palette.highlight !== undefined
+    readonly property color highlight: hasHighlight ? palette.highlight : primary
+    // Text inputs: a custom theme's "inputBorder" (the edge, at rest and
+    // focused) and "onInput" (what's typed, and the hint).
+    readonly property bool hasInputColors: custom && (palette.inputBorder !== undefined || palette.onInput !== undefined)
+    readonly property color inputBorder: custom && palette.inputBorder ? palette.inputBorder : outlineVariant
+    readonly property color inputFocus: custom && palette.inputBorder ? palette.inputBorder : primary
+    readonly property color inputContent: custom && palette.onInput ? palette.onInput : surfaceContent
+    // Square themes show pictures square, and zoom round app icons and
+    // photos so they fill the square.
+    readonly property bool squareImages: customCornerCap === 0
+    readonly property real imageZoom: squareImages ? 1.42 : 1
     // Graphite's ink: what's selected or primary, filled. A custom theme's
     // "indicator" / "onIndicator" roles recolor it (and the indicator) in any base.
     readonly property color ink: custom && palette.indicator ? palette.indicator : surfaceContent
@@ -321,6 +334,17 @@ QtObject {
         return custom && customTheme.shape && customTheme.shape.full !== undefined
             ? Math.min(customTheme.shape.full, height / 2) : height / 2
     }
+    // A fixed corner written in a component: as is, or capped by a custom
+    // theme's largest corner (0 in a square theme).
+    readonly property real customCornerCap: {
+        if (!custom || !customTheme.shape)
+            return -1
+        let m = -1
+        for (const k in customTheme.shape)
+            m = Math.max(m, customTheme.shape[k] === 999 ? -1 : customTheme.shape[k])
+        return m
+    }
+    function corner(r) { return customCornerCap >= 0 ? Math.min(r, customCornerCap) : r }
     function pill(height) { return graphite || fluent || (custom && customTheme.shape && customTheme.shape.full !== undefined) ? Math.min(shape.full, height / 2) : height / 2 }
 
     // ---- Type ----

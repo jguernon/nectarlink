@@ -442,7 +442,7 @@ Item {
                                     anchors.right: parent.right
                                     anchors.verticalCenter: parent.verticalCenter
                                     width: 28; height: 28
-                                    radius: 14
+                                    radius: Theme.corner(14)
                                     activeFocusOnTab: true
                                     color: testHover.hovered ? Theme.surfaceContainerHighest : "transparent"
                                     border.width: Theme.focusVisible(testBtn) ? 2 : 0
@@ -781,7 +781,7 @@ Item {
                         radius: Theme.radiusSm
                         color: Theme.surfaceContainerHigh
                         border.width: paramInput.activeFocus ? 2 : 1
-                        border.color: paramInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                        border.color: paramInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                         TextInput {
                             id: paramInput
@@ -790,7 +790,7 @@ Item {
                             anchors.rightMargin: 12
                             verticalAlignment: TextInput.AlignVCenter
                             clip: true
-                            color: Theme.surfaceContent
+                            color: Theme.inputContent
                             selectionColor: Theme.primaryContainer
                             selectedTextColor: Theme.primaryContainerContent
                             font.family: editorSheet.actionKind === "run_command" || editorSheet.actionKind === "shortcut"
@@ -834,7 +834,7 @@ Item {
                     radius: Theme.radiusSm
                     color: Theme.surfaceContainerHigh
                     border.width: labelInput.activeFocus ? 2 : 1
-                    border.color: labelInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                    border.color: labelInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                     TextInput {
                         id: labelInput
@@ -843,7 +843,7 @@ Item {
                         anchors.rightMargin: 12
                         verticalAlignment: TextInput.AlignVCenter
                         clip: true
-                        color: Theme.surfaceContent
+                        color: Theme.inputContent
                         selectionColor: Theme.primaryContainer
                         selectedTextColor: Theme.primaryContainerContent
                         font.family: Theme.fontUi
@@ -1012,7 +1012,7 @@ Item {
                 radius: Theme.radiusSm
                 color: Theme.surfaceContainerHigh
                 border.width: pageNameInput.activeFocus ? 2 : 1
-                border.color: pageNameInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: pageNameInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
                 TextInput {
                     id: pageNameInput
@@ -1021,7 +1021,7 @@ Item {
                     anchors.rightMargin: 12
                     verticalAlignment: TextInput.AlignVCenter
                     clip: true
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     font.family: Theme.fontUi

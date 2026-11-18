@@ -252,7 +252,7 @@ Card {
                             id: eqBar
                             required property int index
                             width: 2.5
-                            radius: 1.25
+                            radius: Theme.corner(1.25)
                             anchors.bottom: parent.bottom
                             color: card.playing ? Theme.primary : Theme.surfaceContentVariant
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -271,7 +271,7 @@ Card {
                     anchors.verticalCenter: parent.verticalCenter
                     height: 21
                     width: card.hasMultipleSources ? dualSourceRow.implicitWidth + 6 : singleSourceRow.implicitWidth + 10
-                    radius: 10.5
+                    radius: Theme.corner(10.5)
                     color: Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b, Theme.dark ? 0.12 : 0.08)
                     border.width: card.hasMultipleSources ? 1 : 0
                     border.color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.28)
@@ -308,7 +308,7 @@ Card {
                         Rectangle {
                             height: 17
                             width: phoneSegRow.implicitWidth + 10
-                            radius: 8.5
+                            radius: Theme.corner(8.5)
                             color: !card.isLocalPc ? Theme.primary : "transparent"
                             Behavior on color { ColorAnimation { duration: 150 } }
                             Row {
@@ -337,7 +337,7 @@ Card {
                         Rectangle {
                             height: 17
                             width: pcSegRow.implicitWidth + 10
-                            radius: 8.5
+                            radius: Theme.corner(8.5)
                             color: card.isLocalPc ? Theme.primary : "transparent"
                             Behavior on color { ColorAnimation { duration: 150 } }
                             Row {
@@ -607,7 +607,7 @@ Card {
                     opacity: bar.activeHover ? 1.0 : (card.playing ? 0.85 : 0.0)
                     x: Math.max(0, Math.min(bar.width - width, (bar.width * bar.fraction) - width / 2))
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 12; height: 12; radius: 6
+                    width: 12; height: 12; radius: Theme.corner(6)
                     color: Theme.primary
                     border.width: 2
                     border.color: Theme.surface
@@ -842,7 +842,7 @@ Card {
                 anchors.verticalCenter: parent.verticalCenter
                 width: !card.isLocalPc ? 14 : 5.5
                 height: 5.5
-                radius: 2.75
+                radius: Theme.corner(2.75)
                 color: !card.isLocalPc
                     ? Theme.primary
                     : Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b, 0.28)
@@ -856,7 +856,7 @@ Card {
                 anchors.verticalCenter: parent.verticalCenter
                 width: card.isLocalPc ? 14 : 5.5
                 height: 5.5
-                radius: 2.75
+                radius: Theme.corner(2.75)
                 color: card.isLocalPc
                     ? Theme.primary
                     : Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b, 0.28)

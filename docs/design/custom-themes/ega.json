@@ -25,7 +25,10 @@
     "onError": "#000000",
     "card": "#000000",
     "cardBorder": "#55FFFF",
-    "chrome": "#0000AA"
+    "chrome": "#0000AA",
+    "highlight": "#FF55FF",
+    "inputBorder": "#55FFFF",
+    "onInput": "#FFFF55"
   },
   "shape": {
     "xs": 0,

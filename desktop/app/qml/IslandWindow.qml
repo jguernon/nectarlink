@@ -568,7 +568,7 @@ Window {
                     // 1. Media album art squircle
                     Rectangle {
                         anchors.fill: parent
-                        radius: 8
+                        radius: Theme.corner(8)
                         visible: islandWin.mode === "media"
                         color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.24)
                         Icon {
@@ -581,7 +581,7 @@ Window {
                         RoundedImage {
                             id: compactArtImg
                             anchors.fill: parent
-                            radius: 8
+                            radius: Theme.corner(8)
                             source: islandWin.mediaArt
                             sourceSize: Qt.size(64, 64)
                         }
@@ -633,7 +633,7 @@ Window {
                     // 3. Call / Notification / Waiting / Ready badge
                     Rectangle {
                         anchors.fill: parent
-                        radius: 13
+                        radius: Theme.corner(13)
                         visible: islandWin.mode === "call" || islandWin.mode === "notification" || islandWin.mode === "waiting" || islandWin.mode === "ready"
                         color: islandWin.mode === "call"
                             ? Qt.rgba(0.29, 0.87, 0.50, 0.22)
@@ -701,7 +701,7 @@ Window {
                                 id: cEqBar
                                 required property int index
                                 width: 2.2
-                                radius: 1.1
+                                radius: Theme.corner(1.1)
                                 anchors.bottom: parent.bottom
                                 color: Theme.primary
                                 height: islandWin.mediaPlaying ? 8 : 3
@@ -728,7 +728,7 @@ Window {
                     Rectangle {
                         visible: islandWin.mode === "media"
                         width: 24; height: 24
-                        radius: 12
+                        radius: Theme.corner(12)
                         anchors.verticalCenter: parent.verticalCenter
                         color: cPlayHover.hovered ? Qt.rgba(1, 1, 1, 0.18) : Qt.rgba(1, 1, 1, 0.08)
                         Icon {
@@ -752,7 +752,7 @@ Window {
                     Rectangle {
                         visible: islandWin.mode === "media" && islandWin.mediaCanNext
                         width: 24; height: 24
-                        radius: 12
+                        radius: Theme.corner(12)
                         anchors.verticalCenter: parent.verticalCenter
                         color: cNextHover.hovered ? Qt.rgba(1, 1, 1, 0.18) : "transparent"
                         Icon {
@@ -858,7 +858,7 @@ Window {
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: 12
+                        radius: Theme.corner(12)
                         visible: islandWin.mode === "media"
                         color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.24)
                         Icon {
@@ -871,7 +871,7 @@ Window {
                         RoundedImage {
                             id: expArtImg
                             anchors.fill: parent
-                            radius: 12
+                            radius: Theme.corner(12)
                             source: islandWin.mediaArt
                             sourceSize: Qt.size(112, 112)
                         }
@@ -922,7 +922,7 @@ Window {
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: 24
+                        radius: Theme.corner(24)
                         visible: islandWin.mode === "call" || islandWin.mode === "notification" || islandWin.mode === "waiting" || islandWin.mode === "ready"
                         color: islandWin.mode === "call"
                             ? Qt.rgba(0.29, 0.87, 0.50, 0.22)
@@ -973,7 +973,7 @@ Window {
                         visible: (islandWin.mode === "media" && islandWin.mediaDuration > 0) || islandWin.mode === "transfer"
                         width: parent.width
                         height: 3.5
-                        radius: 1.75
+                        radius: Theme.corner(1.75)
                         color: Qt.rgba(1, 1, 1, 0.16)
 
                         Rectangle {
@@ -1002,7 +1002,7 @@ Window {
                     // ---- Call controls: Answer (when ringing), Mute, Speaker, Hang up ----
                     Rectangle {
                         visible: islandWin.mode === "call" && PhoneCall.ringing && PhoneCall.canEnd
-                        width: 32; height: 32; radius: 16
+                        width: 32; height: 32; radius: Theme.corner(16)
                         color: "#22C55E"
                         Icon {
                             anchors.centerIn: parent
@@ -1016,7 +1016,7 @@ Window {
 
                     Rectangle {
                         visible: islandWin.mode === "call" && !PhoneCall.ringing && PhoneCall.controls
-                        width: 30; height: 30; radius: 15
+                        width: 30; height: 30; radius: Theme.corner(15)
                         color: PhoneCall.muted ? Qt.rgba(1, 1, 1, 0.26) : Qt.rgba(1, 1, 1, 0.12)
                         Icon {
                             anchors.centerIn: parent
@@ -1031,7 +1031,7 @@ Window {
                     // The call's sound on this PC (call.audio), lit while it's here.
                     Rectangle {
                         visible: islandWin.mode === "call" && !PhoneCall.ringing && PhoneCall.callAudioAvailable
-                        width: 30; height: 30; radius: 15
+                        width: 30; height: 30; radius: Theme.corner(15)
                         color: PhoneCall.callAudio ? Qt.rgba(1, 1, 1, 0.26) : Qt.rgba(1, 1, 1, 0.12)
                         Accessible.role: Accessible.Button
                         Accessible.name: PhoneCall.callAudio ? qsTr("Back to phone") : qsTr("On PC")
@@ -1047,7 +1047,7 @@ Window {
 
                     Rectangle {
                         visible: islandWin.mode === "call" && PhoneCall.canEnd
-                        width: 32; height: 32; radius: 16
+                        width: 32; height: 32; radius: Theme.corner(16)
                         color: "#EF4444"
                         Icon {
                             anchors.centerIn: parent
@@ -1062,7 +1062,7 @@ Window {
                     // ---- Media controls: Previous, Play/Pause, Next ----
                     Rectangle {
                         visible: islandWin.mode === "media" && islandWin.mediaCanPrev
-                        width: 28; height: 28; radius: 14
+                        width: 28; height: 28; radius: Theme.corner(14)
                         anchors.verticalCenter: parent.verticalCenter
                         color: expPrevHover.hovered ? Qt.rgba(1, 1, 1, 0.20) : Qt.rgba(1, 1, 1, 0.08)
                         Icon {
@@ -1079,7 +1079,7 @@ Window {
 
                     Rectangle {
                         visible: islandWin.mode === "media"
-                        width: 34; height: 34; radius: 17
+                        width: 34; height: 34; radius: Theme.corner(17)
                         anchors.verticalCenter: parent.verticalCenter
                         color: Theme.primary
                         Icon {
@@ -1101,7 +1101,7 @@ Window {
 
                     Rectangle {
                         visible: islandWin.mode === "media" && islandWin.mediaCanNext
-                        width: 28; height: 28; radius: 14
+                        width: 28; height: 28; radius: Theme.corner(14)
                         anchors.verticalCenter: parent.verticalCenter
                         color: expNextHover.hovered ? Qt.rgba(1, 1, 1, 0.20) : Qt.rgba(1, 1, 1, 0.08)
                         Icon {
@@ -1119,7 +1119,7 @@ Window {
                     // ---- Transfer cancel button ----
                     Rectangle {
                         visible: islandWin.mode === "transfer" && !islandWin.transferJustFinished && islandWin.activeTransferId.length > 0
-                        width: 28; height: 28; radius: 14
+                        width: 28; height: 28; radius: Theme.corner(14)
                         anchors.verticalCenter: parent.verticalCenter
                         color: expCancelHover.hovered ? Qt.rgba(1, 0.3, 0.3, 0.28) : Qt.rgba(1, 1, 1, 0.10)
                         Icon {

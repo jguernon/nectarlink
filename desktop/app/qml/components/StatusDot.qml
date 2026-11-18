@@ -11,14 +11,14 @@ Item {
 
     Rectangle {
         anchors.centerIn: parent
-        width: 13; height: 13; radius: 6.5
+        width: 13; height: 13; radius: Theme.corner(6.5)
         color: Theme.success
         opacity: parent.online ? 0.22 : 0
         Behavior on opacity { NumberAnimation { duration: Theme.fadeNormal } }
     }
     Rectangle {
         anchors.centerIn: parent
-        width: 7; height: 7; radius: 3.5
+        width: 7; height: 7; radius: Theme.corner(3.5)
         color: parent.online ? Theme.success : Theme.outline
         Behavior on color { ColorAnimation { duration: Theme.fadeNormal } }
     }

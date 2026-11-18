@@ -639,7 +639,7 @@ Window {
             visible: (win.info.icon || "").length > 0
             width: 80
             height: 80
-            radius: 20
+            radius: Theme.corner(20)
             source: win.info.icon || ""
         }
         Spinner {
@@ -671,7 +671,7 @@ Window {
         anchors.margins: 12
         width: toolbarRow.implicitWidth + 8
         height: 40
-        radius: 20
+        radius: Theme.corner(20)
         color: Qt.rgba(0, 0, 0, 0.68)
         visible: win.phase === "showing" && video.frameSize.width > 0
         readonly property bool toolbarHasFocus: flexibleBtn.activeFocus || lockBtn.activeFocus || copyShotBtn.activeFocus || saveShotBtn.activeFocus
@@ -788,7 +788,7 @@ Window {
         anchors.rightMargin: besideToolbar ? 6 : 12
         width: navRow.implicitWidth + 8
         height: 40
-        radius: 20
+        radius: Theme.corner(20)
         color: Qt.rgba(0, 0, 0, 0.68)
         visible: toolbar.visible && win.canControl && !win.info.app
         opacity: toolbar.opacity
@@ -835,7 +835,7 @@ Window {
         anchors.margins: 12
         width: 32
         height: 32
-        radius: 16
+        radius: Theme.corner(16)
         color: Qt.rgba(0, 0, 0, 0.68)
         visible: opacity > 0
         opacity: Mirror.muted && !win.info.app && toolbar.visible && toolbar.opacity === 0 ? 1 : 0
@@ -967,7 +967,7 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: win.phase === "ended" && win.info.app === true && (win.info.icon || "").length > 0
                 width: 40; height: 40
-                radius: 10
+                radius: Theme.corner(10)
                 source: win.info.icon || ""
             }
             Icon {

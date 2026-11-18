@@ -242,7 +242,7 @@ Item {
             radius: Theme.graphite ? Theme.radiusSm : height / 2
             color: Theme.graphite ? "transparent" : (Theme.glass ? Theme.tileColor : Theme.surfaceContainerHighest)
             border.width: search.activeFocus ? 2 : (Theme.graphite || Theme.glass ? 1 : 0)
-            border.color: search.activeFocus ? Theme.primary : (Theme.glass ? Theme.cardBorder : Theme.outlineVariant)
+            border.color: search.activeFocus ? Theme.inputFocus : (Theme.glass ? Theme.cardBorder : Theme.inputBorder)
             Icon {
                 id: searchIcon
                 anchors.left: parent.left
@@ -260,7 +260,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: Theme.fontUi
                 font.pixelSize: 14
-                color: Theme.surfaceContent
+                color: Theme.inputContent
                 selectionColor: Theme.primaryContainer
                 selectedTextColor: Theme.primaryContainerContent
                 clip: true
@@ -629,7 +629,7 @@ Item {
                         radius: Theme.graphite ? Theme.radiusSm : Theme.radiusLg
                         color: Theme.graphite ? "transparent" : (Theme.glass ? Theme.tileColor : Theme.surfaceContainerHighest)
                         border.width: dialInput.activeFocus ? 2 : (Theme.graphite || Theme.glass ? 1 : 0)
-                        border.color: dialInput.activeFocus ? Theme.primary : (Theme.glass ? Theme.cardBorder : Theme.outlineVariant)
+                        border.color: dialInput.activeFocus ? Theme.inputFocus : (Theme.glass ? Theme.cardBorder : Theme.inputBorder)
 
                         Column {
                             anchors.left: parent.left
@@ -646,7 +646,7 @@ Item {
                                 font.family: Theme.fontMono
                                 font.pixelSize: 20
                                 font.weight: 600
-                                color: Theme.surfaceContent
+                                color: Theme.inputContent
                                 selectionColor: Theme.primaryContainer
                                 selectedTextColor: Theme.primaryContainerContent
                                 inputMethodHints: Qt.ImhDialableCharactersOnly

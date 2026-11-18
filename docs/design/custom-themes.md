@@ -4,6 +4,9 @@ A custom theme is a JSON file you add in **Settings › Appearance › Custom th
 NectarLink checks it, copies it into its themes folder (`<data dir>/themes/`, e.g.
 `~/.local/share/Nectarlink/themes/` on Linux) and switches to it. Pick a built-in theme to go back.
 
+NectarLink ships with the themes in [`custom-themes/`](custom-themes/) (EGA so far): they're always
+listed and can't be removed; a file of yours with the same name replaces one.
+
 You can also drop files in that folder by hand (**Themes folder** opens it) and press **Reload**
 after editing one.
 
@@ -36,6 +39,8 @@ Color roles, as in `tokens.json`: `primary`, `onPrimary`, `primaryContainer`, `o
 `outlineVariant`, `success`, `warning`, `error`, `onError`, plus `indicator` and `onIndicator`:
 the fill and text of what's selected (navigation, tabs, chips) and, in Graphite, of filled controls;
 `card` and `cardBorder`: the fill and edge of cards (the Home page's boxes, Settings' groups);
-`chrome`: a title bar band across the top of the window (its text keeps `onSurface`).
+`chrome`: a title bar band across the top of the window (its text keeps `onSurface`);
+`highlight`: what's live, the connected phone's outline (the battery ring uses `success`);
+`inputBorder` and `onInput`: text fields' edge (at rest and focused) and their text.
 
 Examples: [`custom-themes/`](custom-themes/).

@@ -158,7 +158,7 @@ Item {
                     id: track
                     width: parent.width
                     height: 6
-                    radius: 3
+                    radius: Theme.corner(3)
                     anchors.verticalCenter: parent.verticalCenter
                     color: Theme.surfaceContainerHighest
                 }

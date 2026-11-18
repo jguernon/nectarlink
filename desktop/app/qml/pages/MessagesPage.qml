@@ -313,7 +313,7 @@ Item {
             radius: Theme.graphite ? Theme.radiusSm : height / 2
             color: Theme.graphite ? "transparent" : (Theme.glass ? Theme.tileColor : Theme.surfaceContainerHighest)
             border.width: search.activeFocus ? 2 : (Theme.graphite || Theme.glass ? 1 : 0)
-            border.color: search.activeFocus ? Theme.primary : (Theme.glass ? Theme.cardBorder : Theme.outlineVariant)
+            border.color: search.activeFocus ? Theme.inputFocus : (Theme.glass ? Theme.cardBorder : Theme.inputBorder)
             Icon {
                 id: searchIcon
                 anchors.left: parent.left
@@ -331,7 +331,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: Theme.fontUi
                 font.pixelSize: 14
-                color: Theme.surfaceContent
+                color: Theme.inputContent
                 selectionColor: Theme.primaryContainer
                 selectedTextColor: Theme.primaryContainerContent
                 clip: true
@@ -520,7 +520,7 @@ Item {
                         visible: !!page.openThread && !!page.openThread.isChat
                         height: 20
                         width: headerAppPillLabel.implicitWidth + 14
-                        radius: 10
+                        radius: Theme.corner(10)
                         color: Theme.secondaryContainer
                         Txt {
                             id: headerAppPillLabel
@@ -579,7 +579,7 @@ Item {
                     width: parent.width - 40
                     font.family: Theme.fontUi
                     font.pixelSize: 15
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     clip: true
@@ -662,7 +662,8 @@ Item {
                             width: 34; height: 34
                             RoundedImage {
                                 anchors.fill: parent
-                                radius: width / 2
+                                radius: Theme.corner(width / 2)
+                                zoom: Theme.imageZoom
                                 visible: srow.modelData.photo.length > 0 && status === Image.Ready
                                 source: srow.modelData.photo
                                 sourceSize: Qt.size(68, 68)
@@ -904,7 +905,7 @@ Item {
             radius: Theme.graphite ? Theme.radiusSm : 24
             color: Theme.graphite ? "transparent" : Theme.surfaceContainerHighest
             border.width: input.activeFocus ? 2 : 1
-            border.color: input.activeFocus ? Theme.primary : Theme.outlineVariant
+            border.color: input.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
             IconButton {
                 id: attachButton
@@ -947,7 +948,7 @@ Item {
                     readOnly: composer.inputDisabled
                     font.family: Theme.fontUi
                     font.pixelSize: 14
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     selectionColor: Theme.primaryContainer
                     selectedTextColor: Theme.primaryContainerContent
                     Accessible.name: composer.isChat
@@ -975,7 +976,8 @@ Item {
                             inputScroll.contentY = cursorRectangle.y + cursorRectangle.height - inputScroll.height
                     }
                     Txt {
-                        visible: input.text.length === 0
+                        // A theme with its own input colors shows a bare field.
+                        visible: input.text.length === 0 && !Theme.hasInputColors
                         role: "body"
                         muted: true
                         elide: Text.ElideRight
@@ -1065,7 +1067,8 @@ Item {
             width: 40; height: 40
             RoundedImage {
                 anchors.fill: parent
-                radius: width / 2
+                radius: Theme.corner(width / 2)
+                zoom: Theme.imageZoom
                 visible: row.thread.photo.length > 0 && status === Image.Ready
                 source: row.thread.photo
                 sourceSize: Qt.size(80, 80)
@@ -1087,14 +1090,15 @@ Item {
                 anchors.rightMargin: -2
                 anchors.bottomMargin: -2
                 width: 18; height: 18
-                radius: 9
+                radius: Theme.corner(9)
                 visible: row.isChat && !!row.thread.appIcon && row.thread.appIcon.length > 0 && appBadgeImg.status === Image.Ready
                 color: Theme.surface
                 RoundedImage {
                     id: appBadgeImg
                     anchors.centerIn: parent
                     width: 14; height: 14
-                    radius: 7
+                    radius: Theme.corner(7)
+                    zoom: Theme.imageZoom
                     source: row.thread.appIcon || ""
                     sourceSize: Qt.size(28, 28)
                     fillMode: Image.PreserveAspectCrop
@@ -1128,7 +1132,7 @@ Item {
                     visible: row.isChat && !!row.thread.appName && row.thread.appName.length > 0
                     height: 18
                     width: appTagTxt.implicitWidth + 12
-                    radius: 9
+                    radius: Theme.corner(9)
                     color: row.selected ? Theme.surfaceContainerHigh : Theme.surfaceContainerHighest
                     Txt {
                         id: appTagTxt
@@ -1175,7 +1179,7 @@ Item {
                     visible: row.unread > 0
                     width: Math.max(20, count.implicitWidth + 10)
                     height: 20
-                    radius: 10
+                    radius: Theme.corner(10)
                     color: Theme.primary
                     Txt {
                         id: count
@@ -1247,7 +1251,7 @@ Item {
             readonly property var audioList: bubble.message.audios || []
             width: Math.max(pictures.width, audiosCol.width, Math.min(text.implicitWidth, bubble.maxWidth - 28) + 28)
             height: pictures.height + audiosCol.height + (text.visible ? text.height + 18 : 0)
-            radius: 18
+            radius: Theme.corner(18)
             color: bubble.mine ? Theme.primaryContainer : Theme.surfaceContainerHigh
             border.width: Theme.graphite ? 1 : 0
             border.color: Theme.outlineVariant
@@ -1276,14 +1280,14 @@ Item {
                         RoundedImage {
                             id: picture
                             anchors.fill: parent
-                            radius: 18
+                            radius: Theme.corner(18)
                             source: parent.modelData
                             fillMode: Image.PreserveAspectCrop
                             sourceSize.width: 520
                         }
                         Rectangle {
                             anchors.fill: parent
-                            radius: 18
+                            radius: Theme.corner(18)
                             color: "transparent"
                             border.width: 2
                             border.color: Theme.primary
@@ -1307,14 +1311,14 @@ Item {
                         required property var modelData
                         width: audiosCol.width
                         height: 44
-                        radius: 14
+                        radius: Theme.corner(14)
                         color: "transparent"
                         Row {
                             x: 12
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: 10
                             Rectangle {
-                                width: 28; height: 28; radius: 14
+                                width: 28; height: 28; radius: Theme.corner(14)
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: bubble.mine ? Theme.primary : Theme.secondaryContainer
                                 Icon {

@@ -28,7 +28,7 @@ use serde_json::{Map, Value};
 pub const BASES: [&str; 5] = ["bloom", "hive", "glass", "graphite", "fluent"];
 
 /// The color roles a theme may set, as in `docs/design/tokens.json`.
-pub const COLOR_ROLES: [&str; 24] = [
+pub const COLOR_ROLES: [&str; 27] = [
     "primary",
     "onPrimary",
     "primaryContainer",
@@ -57,7 +57,16 @@ pub const COLOR_ROLES: [&str; 24] = [
     "cardBorder",
     // A band across the top of the window, under the title and the window buttons.
     "chrome",
+    // What's live: the connected phone's outline.
+    "highlight",
+    // Text inputs: the edge (at rest and focused) and what's typed.
+    "inputBorder",
+    "onInput",
 ];
+
+/// Themes that ship with the app (`docs/design/custom-themes/`): always listed,
+/// never removed. A file in the themes folder with the same id replaces one.
+const BUNDLED: [(&str, &str); 1] = [("ega", include_str!("../../../docs/design/custom-themes/ega.json"))];
 
 const SHAPE_KEYS: [&str; 6] = ["xs", "sm", "md", "lg", "xl", "full"];
 const MAX_FILE_BYTES: u64 = 256 * 1024;
@@ -86,6 +95,19 @@ pub fn list_json(data_dir: &Path) -> String {
                 }
                 Err(e) => tracing::warn!(file = %path.display(), error = %e, "skipping a custom theme"),
             }
+        }
+    }
+    for (id, text) in BUNDLED {
+        if themes.iter().any(|t| t["id"] == id) {
+            continue;
+        }
+        match parse(text) {
+            Ok(mut theme) => {
+                theme.insert("id".into(), Value::String(id.into()));
+                theme.insert("bundled".into(), Value::Bool(true));
+                themes.push(Value::Object(theme));
+            }
+            Err(e) => tracing::warn!(theme = id, error = %e, "skipping a bundled theme"),
         }
     }
     themes.sort_by_key(|t| t["name"].as_str().unwrap_or_default().to_lowercase());
@@ -278,6 +300,24 @@ mod tests {
     }
 
     #[test]
+    fn bundled_themes_are_listed_and_a_file_replaces_them() {
+        let dir = tempfile::tempdir().unwrap();
+        let list: Value = serde_json::from_str(&list_json(dir.path())).unwrap();
+        let ega = list.as_array().unwrap().iter().find(|t| t["id"] == "ega").unwrap();
+        assert_eq!(ega["bundled"], true);
+        assert_eq!(ega["base"], "graphite");
+
+        let src = dir.path().join("mine.json");
+        fs::write(&src, r##"{ "name": "EGA", "dark": { "primary": "#FF55FF" } }"##).unwrap();
+        import(dir.path(), &src).unwrap();
+        let list: Value = serde_json::from_str(&list_json(dir.path())).unwrap();
+        let egas: Vec<_> = list.as_array().unwrap().iter().filter(|t| t["id"] == "ega").collect();
+        assert_eq!(egas.len(), 1);
+        assert_eq!(egas[0]["dark"]["primary"], "#FF55FF");
+        assert!(egas[0].get("bundled").is_none());
+    }
+
+    #[test]
     fn bad_themes_are_refused() {
         assert!(parse("[]").is_err());
         assert!(parse(r##"{ "dark": { "primary": "#000" } }"##).is_err());
@@ -297,10 +337,11 @@ mod tests {
         let id = import(dir.path(), &src).unwrap();
         assert_eq!(id, "mon-th-me-ega");
         let list: Value = serde_json::from_str(&list_json(dir.path())).unwrap();
-        assert_eq!(list[0]["id"], "mon-th-me-ega");
-        assert_eq!(list[0]["shape"]["md"], 0);
+        let mine = list.as_array().unwrap().iter().find(|t| t["id"] == "mon-th-me-ega").unwrap();
+        assert_eq!(mine["shape"]["md"], 0);
         remove(dir.path(), &id).unwrap();
-        assert_eq!(list_json(dir.path()), "[]");
+        let list: Value = serde_json::from_str(&list_json(dir.path())).unwrap();
+        assert!(list.as_array().unwrap().iter().all(|t| t["id"] != "mon-th-me-ega"));
         assert!(remove(dir.path(), "../x").is_err());
     }
 }

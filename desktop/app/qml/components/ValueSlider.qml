@@ -98,7 +98,7 @@ FocusScope {
         visible: !Theme.fluent
         x: Math.max(0, Math.min(slider.width - width, fill.width - width / 2))
         anchors.verticalCenter: parent.verticalCenter
-        width: 16; height: 16; radius: 8
+        width: 16; height: 16; radius: Theme.corner(8)
         color: Theme.graphite ? Theme.ink : Theme.primary
         border.width: Theme.focusVisible(slider) ? 2 : 0
         border.color: Theme.surface

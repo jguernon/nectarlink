@@ -819,7 +819,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 14
                     height: 14
-                    radius: 7
+                    radius: Theme.corner(7)
                     color: dayBanner.allSelected ? Theme.primary : "transparent"
                     border.width: dayBanner.allSelected ? 0 : 1.5
                     border.color: Theme.surfaceContentVariant
@@ -1046,7 +1046,7 @@ Item {
                 anchors.centerIn: parent
                 visible: page.viewedItem !== null && !!page.viewedItem.isVideo
                 width: 76; height: 76
-                radius: 38
+                radius: Theme.corner(38)
                 color: Qt.rgba(0, 0, 0, 0.68)
                 border.width: 2
                 border.color: "#ffffff"
@@ -1328,7 +1328,7 @@ Item {
                 anchors.centerIn: parent
                 visible: tile.isVideo
                 width: 36; height: 36
-                radius: 18
+                radius: Theme.corner(18)
                 color: Qt.rgba(0, 0, 0, 0.62)
                 border.width: 1.5
                 border.color: "#ffffff"
@@ -1349,7 +1349,7 @@ Item {
                 visible: tile.isVideo
                 height: 20
                 width: durTxt.implicitWidth + 12
-                radius: 10
+                radius: Theme.corner(10)
                 color: Qt.rgba(0, 0, 0, 0.72)
                 Txt {
                     id: durTxt
@@ -1370,7 +1370,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 6
                 width: 24; height: 24
-                radius: 12
+                radius: Theme.corner(12)
                 visible: tile.selected || tileHover.hovered || page.selectMode || page.selectedCount > 0
                 color: tile.selected ? Theme.primary : Qt.rgba(0, 0, 0, 0.48)
                 border.width: tile.selected ? 0 : 1.5

@@ -90,7 +90,7 @@ Sheet {
                             x: 8
                             anchors.verticalCenter: parent.verticalCenter
                             width: 28; height: 28
-                            radius: 14
+                            radius: Theme.corner(14)
                             color: row.modelData.outcome === "ok" ? Theme.secondaryContainer
                                  : row.modelData.outcome === "warn" ? Qt.alpha(Theme.warning, 0.18)
                                  : Qt.alpha(Theme.error, 0.16)

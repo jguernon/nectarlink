@@ -35,7 +35,7 @@ FocusScope {
         anchors.fill: parent
         anchors.leftMargin: 2
         anchors.rightMargin: 2
-        radius: 4
+        radius: Theme.corner(4)
         color: item.selected
             ? (mouse.pressed ? Theme.subtleFillTertiary : Theme.subtleFillSecondary)
             : (mouse.pressed ? Theme.subtleFillTertiary : (item.activeHover ? Theme.subtleFillSecondary : "transparent"))
@@ -45,7 +45,7 @@ FocusScope {
             anchors.verticalCenter: parent.verticalCenter
             width: 3
             height: mouse.pressed ? 10 : 16
-            radius: 1.5
+            radius: Theme.corner(1.5)
             color: Theme.primary
             opacity: item.selected ? 1 : 0
             Behavior on height { enabled: !Theme.reduceMotion; NumberAnimation { duration: 167; easing.type: Easing.OutCubic } }

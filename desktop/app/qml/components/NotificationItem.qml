@@ -161,9 +161,20 @@ Item {
         onClicked: if (item.canOpenApp && !item.replying) item.openAppRequested()
     }
 
+    // Square themes: one plain grey rule under every notification instead of
+    // the stacked-card depth.
+    Rectangle {
+        visible: Theme.squareImages
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 1
+        color: Theme.outlineVariant
+    }
+
     // Stacked card visual depth behind collapsed notification groups.
     Rectangle {
-        visible: item.isGroupLead && !item.groupExpanded && item.groupCount > 2
+        visible: item.isGroupLead && !item.groupExpanded && item.groupCount > 2 && !Theme.squareImages
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -178,7 +189,7 @@ Item {
         opacity: 0.45
     }
     Rectangle {
-        visible: item.isGroupLead && !item.groupExpanded
+        visible: item.isGroupLead && !item.groupExpanded && !Theme.squareImages
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -224,7 +235,7 @@ Item {
         y: 0
         width: 2
         height: parent.height
-        radius: 1
+        radius: Theme.corner(1)
         color: Theme.outlineVariant
         opacity: 0.45
     }
@@ -232,11 +243,14 @@ Item {
     // App icon, or its initial when the phone didn't send one.
     Item {
         id: icon
+        clip: Theme.squareImages
         x: item.isGroupChild ? 20 : 12; y: 12
         width: item.isGroupChild ? 24 : 32; height: item.isGroupChild ? 24 : 32
         Image {
             id: image
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: parent.width * Theme.imageZoom
+            height: parent.height * Theme.imageZoom
             source: item.iconUrl
             sourceSize: Qt.size(64, 64)
             smooth: true
@@ -288,7 +302,7 @@ Item {
                         Rectangle {
                             width: 5
                             height: 5
-                            radius: 2.5
+                            radius: Theme.corner(2.5)
                             anchors.verticalCenter: parent.verticalCenter
                             color: Theme.graphite ? Theme.primary : Theme.primaryContainerContent
                         }
@@ -380,14 +394,14 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
                 height: 6
-                radius: 3
+                radius: Theme.corner(3)
                 visible: item.liveSegments.length === 0
                 color: Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b,
                                Theme.dark ? 0.16 : 0.12)
 
                 Rectangle {
                     height: parent.height
-                    radius: 3
+                    radius: Theme.corner(3)
                     x: item.isLive && item.liveData.indeterminate ? Math.round(parent.width * 0.15) : 0
                     width: {
                         if (!item.isLive)
@@ -428,14 +442,14 @@ Item {
                         required property var modelData
                         required property int index
                         height: 6
-                        radius: 3
+                        radius: Theme.corner(3)
                         width: Math.max(6, Math.floor(segRow.availW * Math.max(1, Number(modelData.length || 1)) / segRow.totalLen))
                         color: Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b,
                                        Theme.dark ? 0.16 : 0.12)
 
                         Rectangle {
                             height: parent.height
-                            radius: 3
+                            radius: Theme.corner(3)
                             width: Math.round(parent.width * item.segmentFillFraction(index))
                             color: modelData.color && modelData.color.length > 0 ? modelData.color : Theme.primary
                             Behavior on width {
@@ -457,7 +471,7 @@ Item {
                     readonly property bool reached: item.isLive && Number(item.liveData.progress || 0) >= Number(modelData.position || 0)
                     width: 8
                     height: 8
-                    radius: 4
+                    radius: Theme.corner(4)
                     anchors.verticalCenter: parent.verticalCenter
                     x: Math.round((liveBarBox.width - width) * posRatio)
                     color: reached
@@ -553,7 +567,7 @@ Item {
             radius: Theme.graphite ? Theme.radiusSm : height / 2
             color: Theme.graphite ? "transparent" : Theme.surfaceContainerHighest
             border.width: input.activeFocus ? 2 : 1
-            border.color: input.activeFocus ? Theme.primary : Theme.outlineVariant
+            border.color: input.activeFocus ? Theme.inputFocus : Theme.inputBorder
 
             TextInput {
                 id: input
@@ -564,7 +578,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: Theme.fontUi
                 font.pixelSize: 14
-                color: Theme.surfaceContent
+                color: Theme.inputContent
                 selectionColor: Theme.primaryContainer
                 selectedTextColor: Theme.primaryContainerContent
                 clip: true

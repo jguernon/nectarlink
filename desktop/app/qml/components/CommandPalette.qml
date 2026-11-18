@@ -85,7 +85,8 @@ Item {
 
     Rectangle {
         id: card
-        anchors.horizontalCenter: parent.horizontalCenter
+        // A whole pixel, so a square theme keeps its left edge.
+        x: Math.round((parent.width - width) / 2)
         y: Math.max(56, Math.round(parent.height * 0.12))
         width: Math.min(580, parent.width - 48)
         height: cardColumn.height
@@ -137,7 +138,7 @@ Item {
                         verticalAlignment: TextInput.AlignVCenter
                         font.family: Theme.fontUi
                         font.pixelSize: 15
-                        color: Theme.surfaceContent
+                        color: Theme.inputContent
                         selectionColor: Theme.primaryContainer
                         selectedTextColor: Theme.primaryContainerContent
                         focus: true

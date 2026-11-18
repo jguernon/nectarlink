@@ -338,7 +338,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 3
                         height: navMouse.pressed ? 10 : 16
-                        radius: 1.5
+                        radius: Theme.corner(1.5)
                         color: Theme.primary
                     }
                     border.width: Theme.focusVisible(navItem) ? 2 : (Theme.graphite && selected ? 1 : 0)
@@ -387,7 +387,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         height: 20
                         width: Math.max(20, navBadgeTxt.implicitWidth + 10)
-                        radius: 10
+                        radius: Theme.corner(10)
                         color: navItem.selected
                             ? Qt.rgba(navItem.fg.r, navItem.fg.g, navItem.fg.b, 0.16)
                             : Theme.surfaceContainerHighest
@@ -619,6 +619,8 @@ Item {
                                                 }
                                             }
                                             IconButton {
+                                                // Themes that ship with the app stay.
+                                                visible: !modelData.bundled
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 iconPath: Icons.close
                                                 iconSize: 14
@@ -727,7 +729,7 @@ Item {
                                         readonly property bool selected: Preferences.seed === "wallpaper"
                                         readonly property var wallpaperPalette: Theme.wallpaperSeed
                                             ? Theme.wallpaperSeed[Theme.dark ? "dark" : "light"] : null
-                                        width: 28; height: 28; radius: 14
+                                        width: 28; height: 28; radius: Theme.corner(14)
                                         activeFocusOnTab: true
                                         color: wallpaperPalette ? wallpaperPalette.primary : Theme.surfaceContainerHighest
                                         border.width: selected || Theme.focusVisible(wallpaperSwatch) ? 2 : 0
@@ -761,7 +763,7 @@ Item {
                                             required property string modelData
                                             readonly property bool selected: Preferences.seed === modelData
                                                 || (!Theme.isPhoneSeed && !Theme.isArtworkSeed && Preferences.seed !== "wallpaper" && Theme.seed === modelData)
-                                            width: 28; height: 28; radius: 14
+                                            width: 28; height: 28; radius: Theme.corner(14)
                                             activeFocusOnTab: true
                                             color: Tokens.data.themes.bloom.seeds[modelData].seed
                                             border.width: selected || Theme.focusVisible(swatch) ? 2 : 0
@@ -795,7 +797,7 @@ Item {
                                         visible: !Theme.graphite && Preferences.seed === "black"
                                         height: 28
                                         width: inlineAmoledRow.implicitWidth + 16
-                                        radius: 14
+                                        radius: Theme.corner(14)
                                         color: Theme.glass ? Theme.tileColor : Theme.surfaceContainerHigh
                                         border.width: Theme.glass || Preferences.amoled ? 1 : 0
                                         border.color: Preferences.amoled ? Theme.primary : Theme.cardBorder
@@ -859,7 +861,7 @@ Item {
                                             spacing: 6
                                             Rectangle {
                                                 anchors.verticalCenter: parent.verticalCenter
-                                                width: 18; height: 18; radius: 9
+                                                width: 18; height: 18; radius: Theme.corner(9)
                                                 color: Theme.artworkSeed && Theme.artworkSeed.seed
                                                     ? Theme.artworkSeed.seed
                                                     : (artworkSwatch.artworkPalette ? artworkSwatch.artworkPalette.primary : Theme.primary)
@@ -917,7 +919,7 @@ Item {
                                                 spacing: 6
                                                 Rectangle {
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    width: 18; height: 18; radius: 9
+                                                    width: 18; height: 18; radius: Theme.corner(9)
                                                     color: phoneSwatch.modelData.scheme && phoneSwatch.modelData.scheme.seed
                                                         ? phoneSwatch.modelData.scheme.seed
                                                         : (phoneSwatch.phonePalette ? phoneSwatch.phonePalette.primary : Theme.primary)
@@ -1248,7 +1250,7 @@ Item {
                                             }
                                             height: 30
                                             width: trigChipRow.implicitWidth + 16
-                                            radius: 15
+                                            radius: Theme.corner(15)
                                             color: active
                                                 ? (Theme.glass ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.16) : Theme.secondaryContainer)
                                                 : (Theme.glass ? Theme.tileColor : Theme.surfaceContainerHigh)
@@ -2762,7 +2764,7 @@ Item {
                                         radius: Theme.radiusSm
                                         color: Theme.surfaceContainerHighest
                                         border.width: paletteHotkeyInput.activeFocus ? 2 : 1
-                                        border.color: paletteHotkeyInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                                        border.color: paletteHotkeyInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                         TextInput {
                                             id: paletteHotkeyInput
                                             anchors.fill: parent
@@ -2772,7 +2774,7 @@ Item {
                                             horizontalAlignment: TextInput.AlignHCenter
                                             font.family: Theme.fontUi
                                             font.pixelSize: 12
-                                            color: Theme.surfaceContent
+                                            color: Theme.inputContent
                                             selectionColor: Theme.primaryContainer
                                             selectedTextColor: Theme.primaryContainerContent
                                             clip: true
@@ -2837,7 +2839,7 @@ Item {
                                         radius: Theme.radiusSm
                                         color: Theme.surfaceContainerHighest
                                         border.width: shelfHotkeyInput.activeFocus ? 2 : 1
-                                        border.color: shelfHotkeyInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                                        border.color: shelfHotkeyInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                         TextInput {
                                             id: shelfHotkeyInput
                                             anchors.fill: parent
@@ -2847,7 +2849,7 @@ Item {
                                             horizontalAlignment: TextInput.AlignHCenter
                                             font.family: Theme.fontUi
                                             font.pixelSize: 12
-                                            color: Theme.surfaceContent
+                                            color: Theme.inputContent
                                             selectionColor: Theme.primaryContainer
                                             selectedTextColor: Theme.primaryContainerContent
                                             clip: true
@@ -2908,7 +2910,7 @@ Item {
                                         radius: Theme.radiusSm
                                         color: Theme.surfaceContainerHighest
                                         border.width: photoHotkeyInput.activeFocus ? 2 : 1
-                                        border.color: photoHotkeyInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                                        border.color: photoHotkeyInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                         TextInput {
                                             id: photoHotkeyInput
                                             anchors.fill: parent
@@ -2918,7 +2920,7 @@ Item {
                                             horizontalAlignment: TextInput.AlignHCenter
                                             font.family: Theme.fontUi
                                             font.pixelSize: 12
-                                            color: Theme.surfaceContent
+                                            color: Theme.inputContent
                                             selectionColor: Theme.primaryContainer
                                             selectedTextColor: Theme.primaryContainerContent
                                             clip: true
@@ -2983,7 +2985,7 @@ Item {
                                         radius: Theme.radiusSm
                                         color: Theme.surfaceContainerHighest
                                         border.width: scanHotkeyInput.activeFocus ? 2 : 1
-                                        border.color: scanHotkeyInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                                        border.color: scanHotkeyInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                         TextInput {
                                             id: scanHotkeyInput
                                             anchors.fill: parent
@@ -2993,7 +2995,7 @@ Item {
                                             horizontalAlignment: TextInput.AlignHCenter
                                             font.family: Theme.fontUi
                                             font.pixelSize: 12
-                                            color: Theme.surfaceContent
+                                            color: Theme.inputContent
                                             selectionColor: Theme.primaryContainer
                                             selectedTextColor: Theme.primaryContainerContent
                                             clip: true
@@ -3109,7 +3111,7 @@ Item {
                                 radius: Theme.radiusSm
                                 color: Theme.surfaceContainerHighest
                                 border.width: obsPortEdit.activeFocus ? 2 : 1
-                                border.color: obsPortEdit.activeFocus ? Theme.primary : Theme.outlineVariant
+                                border.color: obsPortEdit.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                 TextInput {
                                     id: obsPortEdit
                                     anchors.fill: parent
@@ -3117,7 +3119,7 @@ Item {
                                     anchors.rightMargin: 8
                                     verticalAlignment: TextInput.AlignVCenter
                                     horizontalAlignment: TextInput.AlignHCenter
-                                    color: Theme.surfaceContent
+                                    color: Theme.inputContent
                                     selectionColor: Theme.primaryContainer
                                     selectedTextColor: Theme.primaryContainerContent
                                     font.family: Theme.fontMono
@@ -3140,14 +3142,14 @@ Item {
                                 radius: Theme.radiusSm
                                 color: Theme.surfaceContainerHighest
                                 border.width: obsPasswordEdit.activeFocus ? 2 : 1
-                                border.color: obsPasswordEdit.activeFocus ? Theme.primary : Theme.outlineVariant
+                                border.color: obsPasswordEdit.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                 TextInput {
                                     id: obsPasswordEdit
                                     anchors.fill: parent
                                     anchors.leftMargin: 8
                                     anchors.rightMargin: 8
                                     verticalAlignment: TextInput.AlignVCenter
-                                    color: Theme.surfaceContent
+                                    color: Theme.inputContent
                                     selectionColor: Theme.primaryContainer
                                     selectedTextColor: Theme.primaryContainerContent
                                     font.pixelSize: 12
@@ -3677,7 +3679,7 @@ Item {
                                     radius: Theme.radiusSm
                                     color: Theme.surfaceContainerHighest
                                     border.width: localApiPortEdit.activeFocus ? 2 : 1
-                                    border.color: localApiPortEdit.activeFocus ? Theme.primary : Theme.outlineVariant
+                                    border.color: localApiPortEdit.activeFocus ? Theme.inputFocus : Theme.inputBorder
                                     TextInput {
                                         id: localApiPortEdit
                                         anchors.fill: parent
@@ -3685,7 +3687,7 @@ Item {
                                         anchors.rightMargin: 8
                                         verticalAlignment: TextInput.AlignVCenter
                                         horizontalAlignment: TextInput.AlignHCenter
-                                        color: Theme.surfaceContent
+                                        color: Theme.inputContent
                                         selectionColor: Theme.primaryContainer
                                         selectedTextColor: Theme.primaryContainerContent
                                         font.family: Theme.fontMono
@@ -3725,7 +3727,7 @@ Item {
                                     visible: AppController.updateBusy && AppController.updateProgress >= 0
                                     width: 120
                                     height: 4
-                                    radius: 2
+                                    radius: Theme.corner(2)
                                     color: Theme.surfaceContainerHighest
                                     Accessible.role: Accessible.ProgressBar
                                     Accessible.name: qsTr("Update download")
@@ -3967,12 +3969,12 @@ Item {
                 radius: Theme.radiusMd
                 color: Theme.surfaceContainerHighest
                 border.width: phoneFolderInput.activeFocus ? 2 : 1
-                border.color: phoneFolderInput.activeFocus ? Theme.primary : Theme.outlineVariant
+                border.color: phoneFolderInput.activeFocus ? Theme.inputFocus : Theme.inputBorder
                 TextInput {
                     id: phoneFolderInput
                     anchors.fill: parent
                     anchors.margins: 10
-                    color: Theme.surfaceContent
+                    color: Theme.inputContent
                     font.pixelSize: 14
                     selectByMouse: true
                     clip: true

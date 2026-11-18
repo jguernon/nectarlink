@@ -13,10 +13,15 @@ Item {
     property alias implicitImageWidth: image.implicitWidth
     property alias implicitImageHeight: image.implicitHeight
     property real radius: Theme.radiusMd
+    // > 1 enlarges the picture inside the frame (a round icon fills a square one).
+    property real zoom: 1
+    clip: zoom > 1
 
     Image {
         id: image
-        anchors.fill: parent
+        anchors.centerIn: parent
+        width: parent.width * root.zoom
+        height: parent.height * root.zoom
         asynchronous: true
         mipmap: true
         fillMode: Image.PreserveAspectCrop
@@ -25,7 +30,8 @@ Item {
         // The mask runs as the image's own layer effect, so it redraws whenever the image
         // does: a new track's artwork, a switch between sources, or the card being shown
         // again. A separate MultiEffect sampling a hidden layer kept a stale, blank texture.
-        layer.enabled: root.width > 0 && root.height > 0
+        // A square frame is the clip itself: no mask (it would scale with the zoom).
+        layer.enabled: root.width > 0 && root.height > 0 && root.radius > 0
         layer.smooth: true
         layer.effect: MultiEffect {
             maskEnabled: true
