@@ -1,0 +1,9 @@
+PxPlus IBM VGA 8x16 (PxPlus_IBM_VGA_8x16.ttf)
+
+From "The Ultimate Oldschool PC Font Pack" by VileR, https://int10h.org/oldschool-pc-fonts/
+Copyright (c) 2015-2020 VileR.
+
+Licensed under the Creative Commons Attribution-ShareAlike 4.0 International
+License (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/
+
+Included unmodified. Used by the bundled EGA custom theme.

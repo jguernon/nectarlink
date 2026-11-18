@@ -81,8 +81,14 @@ const QML: &[&str] = &[
 const QML_SINGLETONS: &[&str] = &["qml/Tokens.qml", "qml/Theme.qml", "qml/Icons.qml"];
 
 /// Bundled fonts (in `assets/fonts`), compiled in under `:/fonts/`.
-const FONTS: &[&str] =
-    &["Figtree.ttf", "InstrumentSerif-Regular.ttf", "SpaceMono-Regular.ttf", "SpaceMono-Bold.ttf"];
+const FONTS: &[&str] = &[
+    "Figtree.ttf",
+    "InstrumentSerif-Regular.ttf",
+    "SpaceMono-Regular.ttf",
+    "SpaceMono-Bold.ttf",
+    // The bundled EGA custom theme's face.
+    "PxPlus_IBM_VGA_8x16.ttf",
+];
 
 fn write_if_changed(path: &Path, content: impl AsRef<[u8]>) {
     let bytes = content.as_ref();

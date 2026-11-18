@@ -101,7 +101,7 @@ use crate::{
 };
 
 /// How many fonts `build.rs` compiles in.
-const BUNDLED_FONTS: i32 = 4;
+const BUNDLED_FONTS: i32 = 5;
 
 /// Rings the PC when a phone asks ("find my PC").
 #[derive(Debug)]
