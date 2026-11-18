@@ -18,6 +18,7 @@ mod clipboard;
 mod command_palette;
 mod continuity_camera;
 mod core_host;
+mod custom_themes;
 mod deck;
 mod doctor;
 mod feed;

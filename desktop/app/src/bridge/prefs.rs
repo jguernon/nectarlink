@@ -37,6 +37,11 @@ pub mod qobject {
         #[qml_singleton]
         /// "bloom", "hive", "glass", "graphite" or "fluent".
         #[qproperty(QString, theme)]
+        /// The id of the custom theme in use (see `customThemes`), or empty.
+        #[qproperty(QString, custom_theme)]
+        /// The custom themes in `<data dir>/themes`, as a JSON array of
+        /// `{ id, name, base, light, dark, shape, fonts, label }`.
+        #[qproperty(QString, custom_themes)]
         /// Bloom colors: "wallpaper", or a preset: "honey", "sage", "lavender"
         /// or "ocean".
         #[qproperty(QString, seed)]
@@ -185,6 +190,23 @@ pub mod qobject {
         /// Resets the setup walkthrough to step 0 and opens it again.
         #[qinvokable]
         fn restart_walkthrough(self: Pin<&mut Preferences>);
+        /// Adds the theme file a picker chose (a `file:` URL) and switches to
+        /// it. Returns why it couldn't, or empty when it did.
+        #[qinvokable]
+        #[cxx_name = "importTheme"]
+        fn import_theme(self: Pin<&mut Preferences>, url: &QString) -> QString;
+        /// Deletes a custom theme (back to the built-in theme if it was in use).
+        #[qinvokable]
+        #[cxx_name = "removeTheme"]
+        fn remove_theme(self: Pin<&mut Preferences>, id: &QString);
+        /// Reads the themes folder again (after editing a theme file by hand).
+        #[qinvokable]
+        #[cxx_name = "reloadThemes"]
+        fn reload_themes(self: Pin<&mut Preferences>);
+        /// The folder custom themes are kept in.
+        #[qinvokable]
+        #[cxx_name = "themesFolder"]
+        fn themes_folder(self: &Preferences) -> QString;
         /// The languages the app speaks besides the system's, as a JSON array of
         /// `{ code, name }`, each named in its own language.
         #[qinvokable]
@@ -335,6 +357,8 @@ pub mod qobject {
 #[derive(Default)]
 pub struct PreferencesRust {
     theme: QString,
+    custom_theme: QString,
+    custom_themes: QString,
     seed: QString,
     color_mode: QString,
     amoled: bool,
@@ -420,6 +444,9 @@ impl cxx_qt::Initialize for qobject::Preferences {
         let settings = Settings::load(&core_host::host().data_dir);
         settings.apply_runtime();
         self.as_mut().set_theme(QString::from(settings.theme.name()));
+        self.as_mut()
+            .set_custom_themes(QString::from(&crate::custom_themes::list_json(&core_host::host().data_dir)));
+        self.as_mut().set_custom_theme(QString::from(&settings.custom_theme));
         self.as_mut().set_seed(QString::from(&settings.seed));
         self.as_mut().set_color_mode(QString::from(match settings.color_mode {
             ColorMode::System => "system",
@@ -531,6 +558,7 @@ impl cxx_qt::Initialize for qobject::Preferences {
         // Save after any change (connected after loading, so loading doesn't
         // rewrite the file).
         self.as_mut().on_theme_changed(|p| p.save()).release();
+        self.as_mut().on_custom_theme_changed(|p| p.save()).release();
         self.as_mut().on_seed_changed(|p| p.save()).release();
         self.as_mut().on_color_mode_changed(|p| p.save()).release();
         self.as_mut().on_amoled_changed(|p| p.save()).release();
@@ -881,6 +909,10 @@ impl qobject::Preferences {
         if *self.theme() != disk_theme {
             self.as_mut().set_theme(disk_theme);
         }
+        let disk_custom = QString::from(&disk.custom_theme);
+        if *self.custom_theme() != disk_custom {
+            self.as_mut().set_custom_theme(disk_custom);
+        }
         if *self.color_mode() != disk_mode {
             self.as_mut().set_color_mode(disk_mode);
         }
@@ -1001,6 +1033,43 @@ impl qobject::Preferences {
         crate::settings::set_nickname(&dev, if nick.trim().is_empty() { None } else { Some(nick) });
         self.save();
         core_host::host().hub.changed(crate::state::Changes::DEVICES);
+    }
+
+    pub fn import_theme(mut self: Pin<&mut Self>, url: &QString) -> QString {
+        let Some(path) = folder_from_url(url) else {
+            return QString::from(&tr!("Prefs", "No file was chosen."));
+        };
+        let data_dir = &core_host::host().data_dir;
+        match crate::custom_themes::import(data_dir, &path) {
+            Ok(id) => {
+                self.as_mut().set_custom_themes(QString::from(&crate::custom_themes::list_json(data_dir)));
+                self.as_mut().set_custom_theme(QString::from(&id));
+                QString::default()
+            }
+            Err(e) => QString::from(&e),
+        }
+    }
+
+    pub fn remove_theme(mut self: Pin<&mut Self>, id: &QString) {
+        let data_dir = &core_host::host().data_dir;
+        if let Err(e) = crate::custom_themes::remove(data_dir, &String::from(id)) {
+            tracing::warn!(error = %e, "can't remove a custom theme");
+        }
+        if *self.custom_theme() == *id {
+            self.as_mut().set_custom_theme(QString::default());
+        }
+        self.as_mut().set_custom_themes(QString::from(&crate::custom_themes::list_json(data_dir)));
+    }
+
+    pub fn reload_themes(mut self: Pin<&mut Self>) {
+        let data_dir = &core_host::host().data_dir;
+        self.as_mut().set_custom_themes(QString::from(&crate::custom_themes::list_json(data_dir)));
+    }
+
+    pub fn themes_folder(&self) -> QString {
+        let dir = crate::custom_themes::themes_dir(&core_host::host().data_dir);
+        let _ = std::fs::create_dir_all(&dir);
+        QString::from(&dir.to_string_lossy().into_owned())
     }
 
     pub fn choose_recordings_folder(mut self: Pin<&mut Self>, url: &QString) {
@@ -1164,6 +1233,7 @@ impl qobject::Preferences {
         let (win_screen, win_x, win_y, win_w, win_h, win_max) = crate::settings::window_geometry();
         Settings {
             theme: Theme::parse(&String::from(&p.theme)),
+            custom_theme: String::from(&p.custom_theme),
             seed: String::from(&p.seed),
             color_mode: match String::from(&p.color_mode).as_str() {
                 "light" => ColorMode::Light,

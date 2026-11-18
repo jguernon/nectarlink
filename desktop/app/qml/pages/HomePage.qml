@@ -399,6 +399,7 @@ Item {
                             text: qsTr("Try Hive")
                             onClicked: {
                                 Preferences.hiveInviteDismissed = true
+                                Preferences.customTheme = ""
                                 Preferences.theme = "hive"
                             }
                         }

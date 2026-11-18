@@ -11,11 +11,44 @@ import app.nectarlink
 QtObject {
     id: theme
 
-    readonly property bool hive: Preferences.theme === "hive"
-    readonly property bool graphite: Preferences.theme === "graphite"
-    readonly property bool glass: Preferences.theme === "glass" || Preferences.theme === "blurry"
+    // ---- Custom themes (files in the themes folder, see custom_themes.rs) ----
+    readonly property var customThemes: {
+        try {
+            return JSON.parse(Preferences.customThemes || "[]")
+        } catch (e) {
+            return []
+        }
+    }
+    // The custom theme in use, or null.
+    readonly property var customTheme: {
+        if (Preferences.customTheme === "")
+            return null
+        for (let i = 0; i < customThemes.length; i++) {
+            if (customThemes[i].id === Preferences.customTheme)
+                return customThemes[i]
+        }
+        return null
+    }
+    readonly property bool custom: customTheme !== null
+    // The built-in theme drawing the components: the custom theme's base, or the choice.
+    readonly property string baseTheme: custom ? customTheme.base : Preferences.theme
+    // A custom theme's part over a built-in one's: its keys win, the rest stays.
+    function overlay(base, part) {
+        if (!part)
+            return base
+        const out = {}
+        for (const k in base)
+            out[k] = base[k]
+        for (const k in part)
+            out[k] = part[k]
+        return out
+    }
+
+    readonly property bool hive: baseTheme === "hive"
+    readonly property bool graphite: baseTheme === "graphite"
+    readonly property bool glass: baseTheme === "glass" || baseTheme === "blurry"
     // Windows 11 (WinUI 3): Mica, layered cards, 4 px controls, the system accent.
-    readonly property bool fluent: Preferences.theme === "fluent"
+    readonly property bool fluent: baseTheme === "fluent"
     // Windows' accent ({ light, dark }), or null elsewhere: Fluent then uses its own blue.
     readonly property var systemAccent: AppController.systemAccent !== ""
         ? JSON.parse(AppController.systemAccent) : null
@@ -115,17 +148,20 @@ QtObject {
         : (seed === "phone" || seed.startsWith("phone:"))
           ? activePhoneSeed
           : (seed === "wallpaper" ? wallpaperSeed : bloomSeeds[seed])
-    readonly property var palette: hive
+    readonly property var basePalette: hive
         ? Tokens.data.themes.hive.variants[dark ? "comb" : "wax"]
         : (graphite
             ? Tokens.data.themes.graphite.variants[dark ? "slate" : "paper"]
             : (fluent
                 ? Tokens.data.themes.fluent.variants[dark ? "dark" : "light"]
                 : seedColors[dark ? "dark" : "light"]))
-    readonly property var status: graphite || hive || fluent ? palette : Tokens.data.themes.bloom.status[dark ? "dark" : "light"]
+    readonly property var palette: custom ? overlay(basePalette, customTheme[dark ? "dark" : "light"]) : basePalette
+    readonly property var status: graphite || hive || fluent || custom
+        ? overlay(graphite || hive || fluent ? {} : Tokens.data.themes.bloom.status[dark ? "dark" : "light"], palette)
+        : Tokens.data.themes.bloom.status[dark ? "dark" : "light"]
 
     // ---- Color roles ----
-    readonly property color primary: fluent && systemAccent ? systemAccent[dark ? "dark" : "light"] : palette.primary
+    readonly property color primary: fluent && systemAccent && !(custom && palette.primary !== basePalette.primary) ? systemAccent[dark ? "dark" : "light"] : palette.primary
     readonly property color primaryContent: palette.onPrimary
     // Fluent: a light wash of the accent, so it follows the system accent too.
     readonly property color primaryContainer: fluent
@@ -259,9 +295,10 @@ QtObject {
     readonly property color scrim: Qt.rgba(0, 0, 0, dark ? 0.5 : 0.32)
 
     // ---- Shape ----
-    readonly property var shape: graphite ? Tokens.data.themes.graphite.shape
+    readonly property var baseShape: graphite ? Tokens.data.themes.graphite.shape
         : (hive ? Tokens.data.themes.hive.shape
             : (fluent ? Tokens.data.themes.fluent.shape : Tokens.data.themes.bloom.shape))
+    readonly property var shape: custom ? overlay(baseShape, customTheme.shape) : baseShape
     readonly property int radiusXs: shape.xs
     readonly property int radiusSm: shape.sm
     readonly property int radiusMd: shape.md
@@ -269,7 +306,7 @@ QtObject {
     readonly property int radiusXl: shape.xl
     // "Pill": half the height of whatever uses it, in Bloom. Graphite and
     // Fluent use their own small corner instead.
-    function pill(height) { return graphite || fluent ? shape.full : height / 2 }
+    function pill(height) { return graphite || fluent || (custom && customTheme.shape && customTheme.shape.full !== undefined) ? Math.min(shape.full, height / 2) : height / 2 }
 
     // ---- Type ----
     // Bundled with the app (assets/fonts).
@@ -284,17 +321,20 @@ QtObject {
     }
     readonly property string fluentText: firstFont(["Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI"], "Figtree")
     readonly property string fluentDisplay: firstFont(["Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI"], "Figtree")
-    readonly property string fontUi: fluent ? fluentText : "Figtree"
-    readonly property string fontDisplay: graphite ? "Instrument Serif" : (fluent ? fluentDisplay : "Figtree")
-    readonly property string fontMono: "Space Mono"
+    readonly property var customFonts: custom && customTheme.fonts ? customTheme.fonts : ({})
+    readonly property string fontUi: customFonts.ui ? customFonts.ui : (fluent ? fluentText : "Figtree")
+    readonly property string fontDisplay: customFonts.display ? customFonts.display
+        : (graphite ? "Instrument Serif" : (fluent ? fluentDisplay : "Figtree"))
+    readonly property string fontMono: customFonts.mono ? customFonts.mono : "Space Mono"
     // Caption button glyphs: Segoe Fluent Icons ships with Windows 11 only;
     // Windows 10's Segoe MDL2 Assets has the same code points.
     readonly property string captionIconFont: Qt.fontFamilies().indexOf("Segoe Fluent Icons") >= 0
         ? "Segoe Fluent Icons" : "Segoe MDL2 Assets"
     readonly property var typography: Tokens.data.typography
-    readonly property var labelStyle: graphite ? Tokens.data.themes.graphite.label
+    readonly property var baseLabelStyle: graphite ? Tokens.data.themes.graphite.label
         : (hive ? Tokens.data.themes.hive.label
             : (fluent ? Tokens.data.themes.fluent.label : Tokens.data.themes.bloom.label))
+    readonly property var labelStyle: custom ? overlay(baseLabelStyle, customTheme.label) : baseLabelStyle
 
     // ---- Layout and spacing ----
     readonly property var layout: Tokens.data.layout.desktop

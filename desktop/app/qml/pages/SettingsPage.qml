@@ -276,6 +276,16 @@ Item {
         onAccepted: folderSyncSheet.pcFolder = Preferences.localFolder(selectedFolder.toString())
     }
 
+    FileDialog {
+        id: themeFilePicker
+        title: qsTr("Add a theme")
+        nameFilters: [qsTr("Theme files (*.json)"), qsTr("All files (*)")]
+        onAccepted: page.themeError = Preferences.importTheme(selectedFile.toString())
+    }
+
+    // Why the last theme file couldn't be added, or empty.
+    property string themeError: ""
+
     FolderDialog {
         id: recordingsFolderPicker
         title: qsTr("Save recordings in")
@@ -568,8 +578,93 @@ Item {
                                     { value: "graphite", label: qsTr("Graphite") },
                                     { value: "fluent", label: qsTr("Fluent") }
                                 ]
-                                value: Theme.hive ? "hive" : (Theme.glass ? "glass" : Preferences.theme)
-                                onPicked: (value) => Preferences.theme = value
+                                value: Theme.custom ? "" : (Theme.hive ? "hive" : (Theme.glass ? "glass" : Preferences.theme))
+                                onPicked: (value) => {
+                                    Preferences.customTheme = ""
+                                    Preferences.theme = value
+                                }
+                            }
+                        }
+                        Divider { width: parent.width }
+                        ListRow {
+                            id: customThemesRow
+                            width: parent.width
+                            stackBelow: true
+                            iconPath: Icons.colorSwatch
+                            title: qsTr("Custom themes")
+                            description: Theme.customThemes.length === 0
+                                ? qsTr("Add a theme file (.json) to change the colors, corners and fonts.")
+                                : qsTr("Your theme files. They ride on a built-in theme and change its colors, corners and fonts.")
+                            Column {
+                                width: Math.max(280, customThemesRow.width - 38)
+                                spacing: 8
+
+                                Flow {
+                                    width: parent.width
+                                    spacing: 8
+                                    visible: Theme.customThemes.length > 0
+                                    Repeater {
+                                        model: Theme.customThemes
+                                        delegate: Row {
+                                            required property var modelData
+                                            spacing: 2
+                                            Chip {
+                                                interactive: true
+                                                text: modelData.name
+                                                iconPath: Icons.palette
+                                                selected: Preferences.customTheme === modelData.id
+                                                onClicked: {
+                                                    page.themeError = ""
+                                                    Preferences.customTheme = modelData.id
+                                                }
+                                            }
+                                            IconButton {
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                iconPath: Icons.close
+                                                iconSize: 14
+                                                label: qsTr("Remove %1").arg(modelData.name)
+                                                onClicked: Preferences.removeTheme(modelData.id)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Row {
+                                    spacing: 8
+                                    Button {
+                                        variant: "tonal"
+                                        size: "sm"
+                                        iconPath: Icons.plus
+                                        text: qsTr("Add a theme")
+                                        onClicked: {
+                                            page.themeError = ""
+                                            themeFilePicker.open()
+                                        }
+                                    }
+                                    Button {
+                                        variant: "text"
+                                        size: "sm"
+                                        iconPath: Icons.folder
+                                        text: qsTr("Themes folder")
+                                        onClicked: Qt.openUrlExternally("file://" + Preferences.themesFolder())
+                                    }
+                                    Button {
+                                        variant: "text"
+                                        size: "sm"
+                                        iconPath: Icons.refresh
+                                        text: qsTr("Reload")
+                                        onClicked: Preferences.reloadThemes()
+                                    }
+                                }
+
+                                Txt {
+                                    width: parent.width
+                                    visible: page.themeError !== ""
+                                    text: page.themeError
+                                    role: "bodySmall"
+                                    color: Theme.error
+                                    wrapMode: Text.Wrap
+                                }
                             }
                         }
                         Divider { width: parent.width }

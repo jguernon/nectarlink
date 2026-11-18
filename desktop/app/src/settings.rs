@@ -449,6 +449,9 @@ pub fn set_window_geometry(
 #[serde(default, rename_all = "camelCase")]
 pub struct Settings {
     pub theme: Theme,
+    /// A custom theme's id (a file in `<data dir>/themes`), or empty for the
+    /// built-in `theme`. See `custom_themes`.
+    pub custom_theme: String,
     /// Bloom colors: "wallpaper" (from the desktop wallpaper) or a preset,
     /// e.g. "honey" (see docs/design/tokens.json).
     #[serde(alias = "accent")]
@@ -725,6 +728,7 @@ impl Default for Settings {
     fn default() -> Self {
         Settings {
             theme: Theme::default(),
+            custom_theme: String::new(),
             seed: "wallpaper".into(),
             color_mode: ColorMode::default(),
             amoled: false,
@@ -1010,6 +1014,7 @@ mod tests {
 
         let settings = Settings {
             theme: Theme::Graphite,
+            custom_theme: "ega".into(),
             seed: "ocean".into(),
             color_mode: ColorMode::Dark,
             amoled: false,
