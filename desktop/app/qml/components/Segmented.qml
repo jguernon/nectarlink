@@ -45,7 +45,7 @@ Rectangle {
         height: segmented.height - 6
         radius: Theme.graphite ? Math.max(2, Theme.radiusSm - 2) : Theme.pill(height)
         color: Theme.graphite
-            ? Theme.surfaceContent
+            ? Theme.ink
             : Theme.fluent ? (Theme.dark ? Qt.rgba(1, 1, 1, 0.084) : "#FFFFFF")
             : (Theme.glass
                 ? Qt.tint(Qt.rgba(1, 1, 1, Theme.dark ? 0.16 : 0.78), Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, Theme.dark ? 0.24 : 0.14))
@@ -125,7 +125,7 @@ Rectangle {
                     size: Theme.fluent ? 14 : Theme.typography.label.size
                     weight: Theme.fluent ? (option.selected ? 600 : 400) : Theme.typography.label.weight
                     color: option.selected
-                        ? (Theme.graphite ? Theme.surface : (Theme.hive ? Theme.primaryContainerContent : Theme.surfaceContent))
+                        ? (Theme.graphite ? Theme.inkContent : (Theme.hive ? Theme.primaryContainerContent : Theme.surfaceContent))
                         : (segMouse.containsMouse ? Theme.surfaceContent : Theme.surfaceContentVariant)
                     Behavior on color { enabled: !Theme.reduceMotion; ColorAnimation { duration: Theme.fadeFast } }
                 }

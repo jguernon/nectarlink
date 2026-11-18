@@ -319,7 +319,7 @@ Item {
                     readonly property bool selected: page.currentSection === modelData.id
                     readonly property bool isHovered: railCol.hoveredCategoryId === modelData.id && navMouse.containsMouse
                     readonly property color fg: selected && !Theme.fluent
-                        ? (Theme.graphite ? Theme.surface : Theme.secondaryContainerContent)
+                        ? (Theme.graphite ? Theme.inkContent : Theme.secondaryContainerContent)
                         : Theme.surfaceContent
                     width: railCol.width
                     height: 42
@@ -328,7 +328,7 @@ Item {
                     color: Theme.fluent
                         ? (navMouse.pressed ? Theme.subtleFillTertiary : (selected || isHovered ? Theme.subtleFillSecondary : "transparent"))
                         : selected
-                        ? (Theme.graphite ? Theme.surfaceContent : Theme.secondaryContainer)
+                        ? (Theme.graphite ? Theme.ink : Theme.secondaryContainer)
                         : (isHovered ? Qt.rgba(Theme.surfaceContent.r, Theme.surfaceContent.g, Theme.surfaceContent.b, Theme.dark ? 0.06 : 0.04) : "transparent")
 
                     // Fluent: the accent pill of the selected item, as in WinUI's NavigationView.
@@ -451,14 +451,14 @@ Item {
                     required property var modelData
                     readonly property bool selected: page.currentSection === modelData.id
                     readonly property color fg: selected
-                        ? (Theme.graphite ? Theme.surface : Theme.secondaryContainerContent)
+                        ? (Theme.graphite ? Theme.inkContent : Theme.secondaryContainerContent)
                         : Theme.surfaceContent
                     height: 34
                     width: compactTabRow.implicitWidth + 22
                     anchors.verticalCenter: parent.verticalCenter
                     radius: Theme.pill(height)
                     color: selected
-                        ? (Theme.graphite ? Theme.surfaceContent : Theme.secondaryContainer)
+                        ? (Theme.graphite ? Theme.ink : Theme.secondaryContainer)
                         : Theme.surfaceContainerHigh
                     border.width: Theme.graphite ? 1 : 0
                     border.color: Theme.outlineVariant
@@ -1479,14 +1479,14 @@ Item {
                             required property bool online
                             readonly property bool selected: page.selectedDeviceIndex === index
                             readonly property color fg: selected
-                                ? (Theme.graphite ? Theme.surface : Theme.secondaryContainerContent)
+                                ? (Theme.graphite ? Theme.inkContent : Theme.secondaryContainerContent)
                                 : Theme.surfaceContent
                             height: 36
                             width: deviceTabRow.implicitWidth + 24
                             radius: Theme.pill(height)
                             activeFocusOnTab: true
                             color: selected
-                                ? (Theme.graphite ? Theme.surfaceContent : Theme.secondaryContainer)
+                                ? (Theme.graphite ? Theme.ink : Theme.secondaryContainer)
                                 : Theme.surfaceContainerHigh
                             border.width: Theme.focusVisible(deviceTabPill) ? 2 : (Theme.graphite || selected ? 1 : 0)
                             border.color: Theme.focusVisible(deviceTabPill) ? Theme.primary : (selected ? Theme.primary : Theme.outlineVariant)

@@ -15,13 +15,13 @@ Rectangle {
     signal toggled(bool on)
 
     readonly property color ink: checked
-        ? (Theme.graphite ? Theme.surface : Theme.secondaryContainerContent)
+        ? (Theme.graphite ? Theme.inkContent : Theme.secondaryContainerContent)
         : Theme.surfaceContent
 
     height: 44
     radius: Theme.radiusMd
     color: checked
-        ? (Theme.graphite ? Theme.surfaceContent : Theme.secondaryContainer)
+        ? (Theme.graphite ? Theme.ink : Theme.secondaryContainer)
         : (Theme.graphite ? "transparent" : Theme.surfaceContainerHigh)
     border.width: Theme.graphite || checked ? 1 : 0
     border.color: checked ? Theme.primary : Theme.outlineVariant

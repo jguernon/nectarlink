@@ -26,7 +26,7 @@ FocusScope {
             return mouse.pressed ? Theme.controlFillPressed : (mouse.containsMouse ? Theme.controlFillHover : Theme.controlFill)
         }
         if (variant === "fill")
-            return Theme.graphite ? Theme.surfaceContent : Theme.primary
+            return Theme.graphite ? Theme.ink : Theme.primary
         if (variant === "tonal") {
             if (Theme.glass)
                 return Qt.tint(
@@ -44,7 +44,7 @@ FocusScope {
             return mouse.pressed ? Theme.surfaceContentVariant : Theme.surfaceContent
         }
         if (variant === "fill")
-            return Theme.graphite ? Theme.surface : Theme.primaryContent
+            return Theme.graphite ? Theme.inkContent : Theme.primaryContent
         if (variant === "tonal")
             return Theme.glass ? Theme.surfaceContent : Theme.secondaryContainerContent
         if (variant === "text")

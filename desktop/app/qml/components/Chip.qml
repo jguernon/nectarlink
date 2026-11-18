@@ -15,7 +15,7 @@ Rectangle {
     implicitWidth: row.implicitWidth + 24
     radius: Theme.pill(height)
     color: Theme.graphite
-        ? (selected ? Theme.surfaceContent : "transparent")
+        ? (selected ? Theme.ink : "transparent")
         : (Theme.glass
             ? (selected
                 ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, Theme.dark ? 0.28 : 0.22)
@@ -25,7 +25,7 @@ Rectangle {
     border.width: Theme.graphite || Theme.glass ? 1 : 0
     border.color: Theme.glass
         ? (selected ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.55) : Qt.rgba(1, 1, 1, Theme.dark ? 0.22 : 0.68))
-        : (selected ? Theme.surfaceContent : Theme.outlineVariant)
+        : (selected ? Theme.ink : Theme.outlineVariant)
     scale: chip.interactive && mouse.pressed && !Theme.reduceMotion ? Theme.pressScale : 1.0
     Behavior on scale { enabled: !Theme.reduceMotion; NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
 
@@ -74,7 +74,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             text: chip.text
             role: "label"
-            color: Theme.graphite ? (chip.selected ? Theme.surface : Theme.surfaceContent)
+            color: Theme.graphite ? (chip.selected ? Theme.inkContent : Theme.surfaceContent)
                                   : (chip.selected ? Theme.secondaryContainerContent : Theme.surfaceContent)
         }
     }

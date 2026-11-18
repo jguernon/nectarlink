@@ -33,6 +33,9 @@ after editing one.
 Color roles, as in `tokens.json`: `primary`, `onPrimary`, `primaryContainer`, `onPrimaryContainer`,
 `secondaryContainer`, `onSecondaryContainer`, `surface`, `surfaceContainerLow`, `surfaceContainer`,
 `surfaceContainerHigh`, `surfaceContainerHighest`, `onSurface`, `onSurfaceVariant`, `outline`,
-`outlineVariant`, `success`, `warning`, `error`, `onError`.
+`outlineVariant`, `success`, `warning`, `error`, `onError`, plus `indicator` and `onIndicator`:
+the fill and text of what's selected (navigation, tabs, chips) and, in Graphite, of filled controls;
+`card` and `cardBorder`: the fill and edge of cards (the Home page's boxes, Settings' groups);
+`chrome`: a title bar band across the top of the window (its text keeps `onSurface`).
 
 Examples: [`custom-themes/`](custom-themes/).

@@ -1307,7 +1307,7 @@ Item {
                 visible: tile.firstOfDay && tile.index > 0 && tile.date > 0
                 height: 22
                 width: Math.min(parent.width - 40, dayBadgeTxt.implicitWidth + 14)
-                radius: 11
+                radius: Theme.round(height)
                 color: Qt.rgba(0, 0, 0, 0.68)
                 Txt {
                     id: dayBadgeTxt

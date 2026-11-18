@@ -424,7 +424,7 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                     height: 22
                                     width: statusLabel.implicitWidth + 12
-                                    radius: 11
+                                    radius: Theme.round(height)
                                     color: tileSlot.highlighted ? Theme.primaryContainer : Theme.surfaceContainerHigh
                                     Txt {
                                         id: statusLabel

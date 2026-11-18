@@ -79,8 +79,8 @@ Item {
         property real reveal: 0    // the question unfolding, 0 to 1
         property real burst: 0     // the sparks flying off, 0 to 1
 
-        readonly property color honeyColor: Theme.graphite ? Theme.surfaceContent : Theme.primary
-        readonly property color starColor: Theme.graphite ? Theme.surface : Theme.primaryContent
+        readonly property color honeyColor: Theme.graphite ? Theme.ink : Theme.primary
+        readonly property color starColor: Theme.graphite ? Theme.inkContent : Theme.primaryContent
 
         // A pointy-topped hexagon filling a box of `size`.
         function hexagon(size) {

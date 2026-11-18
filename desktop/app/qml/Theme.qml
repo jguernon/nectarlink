@@ -194,7 +194,8 @@ QtObject {
     // Hive: nearly opaque, so the comb shows through as texture without
     // ever crossing text.
     // Fluent: WinUI's card fill over the page layer (CardBackgroundFillColorDefault).
-    readonly property color cardColor: fluent
+    readonly property color cardColor: custom && palette.card ? palette.card
+        : fluent
         ? (dark ? Qt.rgba(1, 1, 1, 0.051) : Qt.rgba(1, 1, 1, 0.70))
         : hive
         ? (function() {
@@ -216,7 +217,8 @@ QtObject {
                         Qt.rgba(primaryContainer.r, primaryContainer.g, primaryContainer.b, isPhoneSeed ? (dark ? 0.28 : 0.36) : (dark ? 0.16 : 0.22))
                     ))))
     // Hive: a faint honey edge, like wax around a cell.
-    readonly property color cardBorder: fluent
+    readonly property color cardBorder: custom && palette.cardBorder ? palette.cardBorder
+        : fluent
         ? (dark ? Qt.rgba(0, 0, 0, 0.10) : Qt.rgba(0, 0, 0, 0.059))
         : hive
         ? Qt.rgba(primary.r, primary.g, primary.b, dark ? 0.14 : 0.16)
@@ -267,9 +269,16 @@ QtObject {
                         surfaceLow,
                         Qt.rgba(primaryContainer.r, primaryContainer.g, primaryContainer.b, isPhoneSeed ? (dark ? 0.24 : 0.32) : (dark ? 0.14 : 0.18))
                     ))))
-    readonly property color indicator: graphite ? surfaceContent
+    // A custom theme's title bar band ("chrome"), across the top of the window.
+    readonly property bool hasChrome: custom && palette.chrome !== undefined
+    readonly property color chrome: hasChrome ? palette.chrome : "transparent"
+    // Graphite's ink: what's selected or primary, filled. A custom theme's
+    // "indicator" / "onIndicator" roles recolor it (and the indicator) in any base.
+    readonly property color ink: custom && palette.indicator ? palette.indicator : surfaceContent
+    readonly property color inkContent: custom && palette.onIndicator ? palette.onIndicator : surface
+    readonly property color indicator: custom && palette.indicator ? palette.indicator : graphite ? surfaceContent
         : (hive ? primaryContainer : (fluent ? subtleFillSecondary : secondaryContainer))
-    readonly property color indicatorContent: graphite ? surface
+    readonly property color indicatorContent: custom && palette.onIndicator ? palette.onIndicator : graphite ? surface
         : (hive ? primaryContainerContent : (fluent ? surfaceContent : secondaryContainerContent))
 
     // ---- Fluent (WinUI 3) fills and strokes ----
@@ -306,6 +315,12 @@ QtObject {
     readonly property int radiusXl: shape.xl
     // "Pill": half the height of whatever uses it, in Bloom. Graphite and
     // Fluent use their own small corner instead.
+    // A fully round end (status pills, toggles, tracks), unless a custom
+    // theme sets its own "full" corner.
+    function round(height) {
+        return custom && customTheme.shape && customTheme.shape.full !== undefined
+            ? Math.min(customTheme.shape.full, height / 2) : height / 2
+    }
     function pill(height) { return graphite || fluent || (custom && customTheme.shape && customTheme.shape.full !== undefined) ? Math.min(shape.full, height / 2) : height / 2 }
 
     // ---- Type ----

@@ -28,7 +28,7 @@ use serde_json::{Map, Value};
 pub const BASES: [&str; 5] = ["bloom", "hive", "glass", "graphite", "fluent"];
 
 /// The color roles a theme may set, as in `docs/design/tokens.json`.
-pub const COLOR_ROLES: [&str; 19] = [
+pub const COLOR_ROLES: [&str; 24] = [
     "primary",
     "onPrimary",
     "primaryContainer",
@@ -48,6 +48,15 @@ pub const COLOR_ROLES: [&str; 19] = [
     "warning",
     "error",
     "onError",
+    // Not in tokens.json: what's selected (nav, tabs, chips) and Graphite's
+    // filled controls, and the text on it.
+    "indicator",
+    "onIndicator",
+    // Cards (the Home page's boxes, Settings' groups): fill and edge.
+    "card",
+    "cardBorder",
+    // A band across the top of the window, under the title and the window buttons.
+    "chrome",
 ];
 
 const SHAPE_KEYS: [&str; 6] = ["xs", "sm", "md", "lg", "xl", "full"];

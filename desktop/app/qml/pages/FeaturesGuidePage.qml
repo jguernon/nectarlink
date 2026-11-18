@@ -842,7 +842,7 @@ Item {
                                     width: badgeLabel.implicitWidth + 16
                                     implicitWidth: badgeLabel.implicitWidth + 16
                                     implicitHeight: 22
-                                    radius: 11
+                                    radius: Theme.round(height)
                                     color: statusInfo.tone === "available"
                                         ? Theme.secondaryContainer
                                         : (statusInfo.tone === "warn"

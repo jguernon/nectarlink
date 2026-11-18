@@ -2,16 +2,18 @@
   "name": "EGA",
   "base": "graphite",
   "dark": {
-    "primary": "#55FFFF",
+    "primary": "#FFFF55",
     "onPrimary": "#000000",
     "primaryContainer": "#0000AA",
     "onPrimaryContainer": "#FFFFFF",
-    "secondaryContainer": "#00AAAA",
-    "onSecondaryContainer": "#000000",
+    "secondaryContainer": "#0000AA",
+    "onSecondaryContainer": "#FFFFFF",
+    "indicator": "#0000AA",
+    "onIndicator": "#FFFFFF",
     "surface": "#000000",
     "surfaceContainerLow": "#000000",
-    "surfaceContainer": "#0000AA",
-    "surfaceContainerHigh": "#0000AA",
+    "surfaceContainer": "#000000",
+    "surfaceContainerHigh": "#000000",
     "surfaceContainerHighest": "#555555",
     "onSurface": "#FFFFFF",
     "onSurfaceVariant": "#AAAAAA",
@@ -20,30 +22,28 @@
     "success": "#55FF55",
     "warning": "#FFFF55",
     "error": "#FF5555",
-    "onError": "#000000"
+    "onError": "#000000",
+    "card": "#000000",
+    "cardBorder": "#55FFFF",
+    "chrome": "#0000AA"
   },
-  "light": {
-    "primary": "#0000AA",
-    "onPrimary": "#FFFFFF",
-    "primaryContainer": "#00AAAA",
-    "onPrimaryContainer": "#000000",
-    "secondaryContainer": "#FFFFFF",
-    "onSecondaryContainer": "#000000",
-    "surface": "#AAAAAA",
-    "surfaceContainerLow": "#AAAAAA",
-    "surfaceContainer": "#FFFFFF",
-    "surfaceContainerHigh": "#FFFFFF",
-    "surfaceContainerHighest": "#55FFFF",
-    "onSurface": "#000000",
-    "onSurfaceVariant": "#555555",
-    "outline": "#000000",
-    "outlineVariant": "#555555",
-    "success": "#00AA00",
-    "warning": "#AA5500",
-    "error": "#AA0000",
-    "onError": "#FFFFFF"
+  "shape": {
+    "xs": 0,
+    "sm": 0,
+    "md": 0,
+    "lg": 0,
+    "xl": 0,
+    "full": 0
   },
-  "shape": { "xs": 0, "sm": 0, "md": 0, "lg": 0, "xl": 0, "full": 0 },
-  "fonts": { "ui": "PxPlus IBM VGA 8x16", "display": "PxPlus IBM VGA 8x16", "mono": "PxPlus IBM VGA 8x16" },
-  "label": { "case": "upper", "tracking": 0.05, "size": 12, "weight": 400 }
+  "fonts": {
+    "ui": "PxPlus IBM VGA 8x16",
+    "display": "PxPlus IBM VGA 8x16",
+    "mono": "PxPlus IBM VGA 8x16"
+  },
+  "label": {
+    "case": "upper",
+    "tracking": 0.05,
+    "size": 12,
+    "weight": 400
+  }
 }

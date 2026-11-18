@@ -556,6 +556,16 @@ NativeWindow {
         }
     }
 
+    // ---- Title bar band (a custom theme's "chrome" color) ----
+    // Full width under the mark, the page title, the actions and the window
+    // buttons, like a classic title bar.
+    Rectangle {
+        visible: !window.welcome && Theme.hasChrome
+        width: parent.width
+        height: Theme.topBarHeight
+        color: Theme.chrome
+    }
+
     // ---- Navigation rail ----
     Rectangle {
         id: rail
@@ -572,12 +582,13 @@ NativeWindow {
             y: (Theme.topBarHeight - height) / 2
             width: 38; height: 38
             radius: Theme.radiusSm
-            color: Theme.graphite ? Theme.surfaceContent : Theme.primary
+            // On a title bar band, the mark is drawn straight on it.
+            color: Theme.hasChrome ? "transparent" : Theme.graphite ? Theme.ink : Theme.primary
             Icon {
                 anchors.centerIn: parent
                 path: Icons.mark
                 stroke: 2.4
-                color: Theme.graphite ? Theme.surface : Theme.primaryContent
+                color: Theme.hasChrome ? Theme.surfaceContent : Theme.graphite ? Theme.inkContent : Theme.primaryContent
             }
         }
         Column {
@@ -751,7 +762,7 @@ NativeWindow {
 
                 height: 34
                 width: Math.max(0, Math.min(14 + 10 + 8 + sharingLabel.implicitWidth + 12 + stopSharing.width + 4, room))
-                radius: height / 2
+                radius: Theme.round(height)
                 x: Math.max(pageTitle.x + pageTitle.width + 16,
                             Math.min((parent.width - width) / 2, topBarActions.x - width - 16))
                 anchors.verticalCenter: parent.verticalCenter

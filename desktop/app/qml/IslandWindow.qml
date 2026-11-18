@@ -484,7 +484,7 @@ Window {
             anchors.centerIn: pillBg
             width: pillBg.width + 6
             height: pillBg.height + 6
-            radius: height / 2
+            radius: Theme.round(height)
             color: "transparent"
             border.width: 1.5
             border.color: islandWin.mode === "call"
@@ -499,7 +499,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             width: islandWin.pillWidth
             height: islandWin.pillHeight
-            radius: height / 2
+            radius: Theme.round(height)
             // Authentic deep Dynamic Island obsidian surface with crisp specular glass border
             color: Qt.rgba(0.05, 0.055, 0.075, Theme.glass ? 0.92 : 0.96)
             border.width: 1

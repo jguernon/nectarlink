@@ -550,7 +550,7 @@ Column {
                 spacing: 10
                 Rectangle {
                     width: 22; height: 22
-                    radius: 11
+                    radius: Theme.round(height)
                     color: Theme.surfaceContainerHigh
                     Txt {
                         anchors.centerIn: parent

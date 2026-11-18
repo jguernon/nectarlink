@@ -45,7 +45,7 @@ FocusScope {
         id: fluentTrack
         visible: Theme.fluent
         anchors.fill: parent
-        radius: height / 2
+        radius: Theme.round(height)
         color: toggle.checked
             ? (mouse.pressed ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.80)
                 : (mouse.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.90) : Theme.primary))
@@ -58,7 +58,7 @@ FocusScope {
             readonly property real size: mouse.pressed || mouse.containsMouse ? 14 : 12
             width: mouse.pressed ? 17 : size
             height: size
-            radius: height / 2
+            radius: Theme.round(height)
             anchors.verticalCenter: parent.verticalCenter
             x: toggle.checked ? parent.width - width - (mouse.containsMouse || mouse.pressed ? 3 : 4)
                               : (mouse.containsMouse || mouse.pressed ? 3 : 4)

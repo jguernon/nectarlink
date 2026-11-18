@@ -50,14 +50,14 @@ Card {
             tonal: !control.on
             iconPath: control.iconPath
             label: control.label
-            iconColor: control.on ? (Theme.graphite ? Theme.surface : Theme.primaryContent)
+            iconColor: control.on ? (Theme.graphite ? Theme.inkContent : Theme.primaryContent)
                                   : Theme.secondaryContainerContent
             Rectangle {
                 z: -1
                 anchors.fill: parent
                 radius: Theme.pill(height)
                 visible: control.on
-                color: Theme.graphite ? Theme.surfaceContent : Theme.primary
+                color: Theme.graphite ? Theme.ink : Theme.primary
             }
             onClicked: control.clicked()
         }

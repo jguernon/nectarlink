@@ -3455,14 +3455,14 @@ Item {
 
         readonly property color fillColor: {
             if (active && available)
-                return Theme.graphite ? Theme.surfaceContent : Theme.primary
+                return Theme.graphite ? Theme.ink : Theme.primary
             if (active && !available)
                 return Theme.graphite ? Theme.surfaceContainerHigh : Theme.secondaryContainer
             return Theme.graphite ? "transparent" : (Theme.glass ? Theme.tileColor : Theme.surfaceContainerHigh)
         }
         readonly property color contentColor: {
             if (active && available)
-                return Theme.graphite ? Theme.surface : Theme.primaryContent
+                return Theme.graphite ? Theme.inkContent : Theme.primaryContent
             if (active && !available)
                 return Theme.graphite ? Theme.surfaceContent : Theme.secondaryContainerContent
             return available ? Theme.surfaceContent : Theme.surfaceContentVariant
@@ -3638,7 +3638,7 @@ Item {
                     height: parent.height
                     radius: parent.radius
                     color: slider.available
-                           ? (Theme.graphite ? Theme.surfaceContent : Theme.primary)
+                           ? (Theme.graphite ? Theme.ink : Theme.primary)
                            : Theme.surfaceContentVariant
                     Behavior on width {
                         enabled: !Theme.reduceMotion && !dragArea.pressed
@@ -3652,7 +3652,7 @@ Item {
                 x: Math.max(0, Math.min(barScope.width - width, sliderFill.width - width / 2))
                 anchors.verticalCenter: parent.verticalCenter
                 width: 14; height: 14; radius: 7
-                color: Theme.graphite ? Theme.surfaceContent : Theme.primary
+                color: Theme.graphite ? Theme.ink : Theme.primary
                 border.width: Theme.focusVisible(barScope) ? 2 : 0
                 border.color: Theme.surface
                 scale: dragArea.pressed ? 1.15 : 1.0
