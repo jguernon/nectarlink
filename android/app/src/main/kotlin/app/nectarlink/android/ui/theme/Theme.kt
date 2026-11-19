@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package app.nectarlink.android.ui.theme
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.graphics.Color as AndroidColor
@@ -8,7 +9,6 @@ import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -44,6 +44,39 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 val LocalReducedMotion = compositionLocalOf { false }
 val LocalGlassTheme = compositionLocalOf { false }
 val LocalAmoledTheme = compositionLocalOf { false }
+
+/** True in the EGA theme: square corners, the VGA font, the 16 EGA colors. */
+val LocalEgaTheme = compositionLocalOf { false }
+
+/**
+ * The EGA theme is on, readable outside composition by the card modifiers
+ * below ([liquidGlassCard], [bentoWell]), which then draw square corners.
+ * Snapshot state, so the cards redraw when the theme changes.
+ */
+internal var egaSquareCorners by mutableStateOf(false)
+
+/**
+ * The EGA theme (as the desktop's `docs/design/custom-themes/ega.json`): black
+ * page, blue selections, yellow accent, cyan and gray frames. Always dark.
+ */
+private val egaPalette = Palette(
+    primary = Color(0xFFFFFF55),
+    onPrimary = Color(0xFF000000),
+    primaryContainer = Color(0xFF0000AA),
+    onPrimaryContainer = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFF0000AA),
+    onSecondaryContainer = Color(0xFFFFFFFF),
+    surface = Color(0xFF000000),
+    surfaceContainerLow = Color(0xFF000000),
+    surfaceContainer = Color(0xFF000000),
+    surfaceContainerHigh = Color(0xFF000000),
+    surfaceContainerHighest = Color(0xFF555555),
+    onSurface = Color(0xFFFFFFFF),
+    onSurfaceVariant = Color(0xFFAAAAAA),
+    outline = Color(0xFF55FFFF),
+    outlineVariant = Color(0xFF555555),
+)
+private val egaError = Color(0xFFFF5555)
 
 /** True when Android's "Remove animations" (animator duration scale 0) is enabled. */
 @Composable
@@ -325,8 +358,15 @@ private fun ColorScheme.toAmoledScheme(glass: Boolean): ColorScheme = copy(
     outlineVariant = if (glass) Color.White.copy(alpha = 0.12f) else Color(0xFF22252E),
 )
 
-/** Shapes from the tokens: Glass and Bloom are smoothly rounded, Hive a little firmer, Graphite crisp. */
-private fun shapes(graphite: Boolean, glass: Boolean, hive: Boolean) = when {
+/** Shapes from the tokens: Glass and Bloom are smoothly rounded, Hive a little firmer, Graphite crisp, EGA square. */
+private fun shapes(graphite: Boolean, glass: Boolean, hive: Boolean, ega: Boolean = false) = when {
+    ega -> Shapes(
+        extraSmall = RoundedCornerShape(0.dp),
+        small = RoundedCornerShape(0.dp),
+        medium = RoundedCornerShape(0.dp),
+        large = RoundedCornerShape(0.dp),
+        extraLarge = RoundedCornerShape(0.dp),
+    )
     hive -> Shapes(
         extraSmall = RoundedCornerShape(6.dp),
         small = RoundedCornerShape(10.dp),
@@ -388,10 +428,14 @@ fun NectarlinkTheme(
     backdrop: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val dark = when (appearance.mode) {
-        "light" -> false
+    val ega = appearance.theme == "ega"
+    val dark = when {
+        ega -> true
+        else -> when (appearance.mode) {
+            "light" -> false
         "dark" -> true
-        else -> isSystemInDarkTheme()
+            else -> isSystemInDarkTheme()
+        }
     }
     val graphite = appearance.theme == "graphite"
     val glass = appearance.theme == "glass"
@@ -406,10 +450,11 @@ fun NectarlinkTheme(
     val context = LocalContext.current
     // The settings alone pick the color source. Artwork applies only when the user turned
     // "Media artwork color" on; with nothing playing, it falls back to the wallpaper or preset.
-    val artworkSeed = if (!graphite && !hive && appearance.seed == "artwork") mediaSeedColor else null
-    val wallpaper = !graphite && !hive && appearance.dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val artworkSeed = if (!graphite && !hive && !ega && appearance.seed == "artwork") mediaSeedColor else null
+    val wallpaper = !graphite && !hive && !ega && appearance.dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val wallpaperSeed = rememberWallpaperSeed(enabled = wallpaper && artworkSeed == null)
     val baseScheme = when {
+        ega -> remember { egaPalette.toScheme(true, egaError).copy(onError = Color.Black) }
         hive -> remember(dark, error) {
             (if (dark) Tokens.hiveComb else Tokens.hiveWax).toScheme(dark, error)
         }
@@ -434,6 +479,7 @@ fun NectarlinkTheme(
         // Screens let the comb show through; the window paints the surface under it.
         if (combBehind) withAmoled.copy(background = Color.Transparent) else withAmoled
     }
+    androidx.compose.runtime.SideEffect { egaSquareCorners = ega }
     val reducedMotion = rememberReducedMotion()
     val powerSaver = rememberPowerSaver()
 
@@ -450,14 +496,15 @@ fun NectarlinkTheme(
     }
     val assets = context.assets
     val fonts = remember(assets) { AppFonts(assets) }
-    val currentShapes = remember(graphite, glass, hive) { shapes(graphite, glass, hive) }
-    val currentTypography = remember(fonts, graphite) { typography(fonts, graphite) }
+    val currentShapes = remember(graphite, glass, hive, ega) { shapes(graphite, glass, hive, ega) }
+    val currentTypography = remember(fonts, graphite, ega) { typography(fonts, graphite, ega) }
     CompositionLocalProvider(
         LocalAppFonts provides fonts,
         LocalReducedMotion provides reducedMotion,
         LocalGlassTheme provides glass,
         LocalAmoledTheme provides amoledActive,
         LocalHiveTheme provides hive,
+        LocalEgaTheme provides ega,
     ) {
         MaterialTheme(
             colorScheme = targetScheme,
@@ -494,7 +541,7 @@ fun Modifier.liquidGlassCard(
     @Suppress("UNUSED_PARAMETER") tintColor: Color = Color.Transparent,
     outlineColor: Color = Color.Transparent,
 ): Modifier = this.drawWithCache {
-    val radiusPx = cornerRadius.toPx()
+    val radiusPx = if (egaSquareCorners) 0f else cornerRadius.toPx()
     val cr = CornerRadius(radiusPx, radiusPx)
     val strokePx = 1.dp.toPx()
     val halfStroke = strokePx * 0.5f
@@ -565,7 +612,7 @@ fun Modifier.bentoWell(
     fillColor: Color,
     borderColor: Color = Color.Transparent,
 ): Modifier = this.drawWithCache {
-    val r = cornerRadius.toPx()
+    val r = if (egaSquareCorners) 0f else cornerRadius.toPx()
     val cr = CornerRadius(r, r)
     val strokePx = 1.dp.toPx()
     val halfStroke = strokePx * 0.5f

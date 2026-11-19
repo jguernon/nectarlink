@@ -1177,7 +1177,7 @@ private fun FloatingDockTabPill(
                 scaleY = s
             }
             .drawWithCache {
-                val r = 24.dp.toPx()
+                val r = if (app.nectarlink.android.ui.theme.egaSquareCorners) 0f else 24.dp.toPx()
                 val cr = androidx.compose.ui.geometry.CornerRadius(r, r)
                 onDrawBehind {
                     val bg = bgColorState.value
@@ -1211,7 +1211,11 @@ private fun FloatingDockTabPill(
                 modifier = Modifier
                     .size(6.dp)
                     .drawBehind {
-                        drawCircle(color = statusDotColor)
+                        if (app.nectarlink.android.ui.theme.egaSquareCorners) {
+                            drawRect(color = statusDotColor)
+                        } else {
+                            drawCircle(color = statusDotColor)
+                        }
                     },
             )
         }

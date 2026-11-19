@@ -22,25 +22,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import app.nectarlink.android.ui.theme.CircleShape
+import app.nectarlink.android.ui.theme.RoundedCornerShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
+import app.nectarlink.android.ui.theme.Button
+import app.nectarlink.android.ui.theme.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import app.nectarlink.android.ui.theme.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
+import app.nectarlink.android.ui.theme.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import app.nectarlink.android.ui.theme.TextButton
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.rememberCoroutineScope
@@ -270,18 +270,22 @@ fun SettingsScreen(
                             "bloom" to stringResource(R.string.theme_bloom),
                             "glass" to "Glass",
                             "graphite" to stringResource(R.string.theme_graphite),
+                            "ega" to "EGA",
                         ),
                         appearance.theme,
                     ) { value -> onAppearance { it.copy(theme = value) } }
-                    Label(stringResource(R.string.settings_mode))
-                    Choice(
-                        listOf(
-                            "system" to stringResource(R.string.mode_system),
-                            "light" to stringResource(R.string.mode_light),
-                            "dark" to stringResource(R.string.mode_dark),
-                        ),
-                        appearance.mode,
-                    ) { value -> onAppearance { it.copy(mode = value) } }
+                    // EGA is always dark: no light/dark choice.
+                    if (appearance.theme != "ega") {
+                        Label(stringResource(R.string.settings_mode))
+                        Choice(
+                            listOf(
+                                "system" to stringResource(R.string.mode_system),
+                                "light" to stringResource(R.string.mode_light),
+                                "dark" to stringResource(R.string.mode_dark),
+                            ),
+                            appearance.mode,
+                        ) { value -> onAppearance { it.copy(mode = value) } }
+                    }
                     if (AppLanguage.supported) {
                         // System and English, plus the language picked from the list (or More).
                         val context = LocalContext.current
@@ -1344,6 +1348,41 @@ private fun CompanionWakeAccess(
             }
         }
     }
+    // The proximity routine: connected only while the PC's Bluetooth is near.
+    if (associated && primaryPcForRoutine(devices) != null) {
+        val routinePc = primaryPcForRoutine(devices)!!
+        var routineOn by remember { mutableStateOf(app.nectarlink.android.companion.ProximityRoutine.isEnabled(context)) }
+        val routineTitle = stringResource(R.string.proximity_routine_title)
+        SettingRowDivider()
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.weight(1f).padding(end = 12.dp)) {
+                Text(routineTitle, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    stringResource(R.string.proximity_routine_hint, routinePc.name),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Switch(
+                checked = routineOn,
+                onCheckedChange = { on ->
+                    routineOn = on
+                    app.nectarlink.android.companion.ProximityRoutine.setEnabled(context, on, routinePc.id)
+                    if (on) PcCompanion.startObservingPresence(context)
+                },
+                colors = app.nectarlink.android.ui.theme.nectarSwitchColors(),
+                modifier = Modifier.semantics { contentDescription = routineTitle },
+            )
+        }
+    }
+}
+
+/** The PC the proximity routine follows: the one already chosen, else the online one, else the first. */
+@Composable
+private fun primaryPcForRoutine(devices: List<Device>): Device? {
+    val context = LocalContext.current
+    val chosen = app.nectarlink.android.companion.ProximityRoutine.pcId(context)
+    return devices.firstOrNull { it.id == chosen } ?: devices.firstOrNull { it.online } ?: devices.firstOrNull()
 }
 
 /** Do Not Disturb and silent ringer control from a PC. */
@@ -1805,7 +1844,11 @@ internal fun Choice(options: List<Pair<String, String>>, selected: String, onSel
             SegmentedButton(
                 selected = value == selected,
                 onClick = { onSelect(value) },
-                shape = SegmentedButtonDefaults.itemShape(index, options.size),
+                shape = if (app.nectarlink.android.ui.theme.LocalEgaTheme.current) {
+                    androidx.compose.ui.graphics.RectangleShape
+                } else {
+                    SegmentedButtonDefaults.itemShape(index, options.size)
+                },
             ) { Text(label) }
         }
     }

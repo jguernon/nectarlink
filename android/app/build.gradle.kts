@@ -165,7 +165,7 @@ abstract class BundleFonts : DefaultTask() {
     @TaskAction
     fun copy() {
         fs.sync {
-            from(fonts) { include("*.ttf", "OFL-*.txt") }
+            from(fonts) { include("*.ttf", "OFL-*.txt", "CC-BY-SA-*.txt") }
             into(outputDir.dir("fonts"))
         }
     }

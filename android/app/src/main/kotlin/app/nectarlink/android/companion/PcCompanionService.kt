@@ -25,11 +25,25 @@ class PcCompanionService : CompanionDeviceService() {
         wakeAndReconnect()
     }
 
+    @Deprecated("Deprecated in API 36 in favor of onDevicePresenceEvent")
+    @Suppress("DEPRECATION")
+    override fun onDeviceDisappeared(associationInfo: AssociationInfo) {
+        super.onDeviceDisappeared(associationInfo)
+        applicationContext?.let(ProximityRoutine::onPcAway)
+    }
+
     @Deprecated("Deprecated in API 33")
     @Suppress("DEPRECATION")
     override fun onDeviceAppeared(address: String) {
         super.onDeviceAppeared(address)
         wakeAndReconnect()
+    }
+
+    @Deprecated("Deprecated in API 33")
+    @Suppress("DEPRECATION")
+    override fun onDeviceDisappeared(address: String) {
+        super.onDeviceDisappeared(address)
+        applicationContext?.let(ProximityRoutine::onPcAway)
     }
 
     @RequiresApi(Build.VERSION_CODES.BAKLAVA)
@@ -39,6 +53,10 @@ class PcCompanionService : CompanionDeviceService() {
             event.event == DevicePresenceEvent.EVENT_BT_CONNECTED
         ) {
             wakeAndReconnect()
+        } else if (event.event == DevicePresenceEvent.EVENT_BLE_DISAPPEARED ||
+            event.event == DevicePresenceEvent.EVENT_BT_DISCONNECTED
+        ) {
+            applicationContext?.let(ProximityRoutine::onPcAway)
         }
     }
 
@@ -54,6 +72,7 @@ class PcCompanionService : CompanionDeviceService() {
             return
         }
         ConnectionService.start(appContext)
+        ProximityRoutine.onPcNear(appContext)
         core?.reconnectNow()
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 /**
  * The fonts bundled with the app (`assets/fonts` in the repository, packaged
@@ -30,6 +31,8 @@ class AppFonts(assets: AssetManager) {
         },
     )
     val serif = FontFamily(Font("fonts/InstrumentSerif-Regular.ttf", assets))
+    /** The EGA theme's PxPlus IBM VGA 8x16 (CC BY-SA 4.0): one size of bitmap-style letters. */
+    val vga = FontFamily(Font("fonts/PxPlus_IBM_VGA_8x16.ttf", assets))
     val mono = FontFamily(
         Font("fonts/SpaceMono-Regular.ttf", assets),
         Font("fonts/SpaceMono-Bold.ttf", assets, FontWeight.Bold),
@@ -43,8 +46,9 @@ val LocalAppFonts = staticCompositionLocalOf<AppFonts> { error("NectarlinkTheme 
  * fonts, with the weights from docs/design/tokens.json: bold headings in
  * Bloom, serif headings in Graphite.
  */
-internal fun typography(fonts: AppFonts, graphite: Boolean): Typography {
+internal fun typography(fonts: AppFonts, graphite: Boolean, ega: Boolean = false): Typography {
     val base = Typography()
+    if (ega) return egaTypography(base, fonts)
     fun TextStyle.text(weight: Int) = copy(fontFamily = fonts.sans, fontWeight = FontWeight(weight))
     fun TextStyle.heading() =
         if (graphite) copy(fontFamily = fonts.serif, fontWeight = FontWeight.Normal) else text(650)
@@ -64,5 +68,30 @@ internal fun typography(fonts: AppFonts, graphite: Boolean): Typography {
         labelLarge = base.labelLarge.text(600),
         labelMedium = base.labelMedium.text(600),
         labelSmall = base.labelSmall.text(500),
+    )
+}
+
+/**
+ * EGA: every style in the VGA font at its natural weight (the font has only
+ * one), with line heights a little looser so the tall letters breathe.
+ */
+private fun egaTypography(base: Typography, fonts: AppFonts): Typography {
+    fun TextStyle.vga() = copy(fontFamily = fonts.vga, fontWeight = FontWeight.Normal, letterSpacing = 0.sp)
+    return base.copy(
+        displayLarge = base.displayLarge.vga(),
+        displayMedium = base.displayMedium.vga(),
+        displaySmall = base.displaySmall.vga(),
+        headlineLarge = base.headlineLarge.vga(),
+        headlineMedium = base.headlineMedium.vga(),
+        headlineSmall = base.headlineSmall.vga(),
+        titleLarge = base.titleLarge.vga(),
+        titleMedium = base.titleMedium.vga(),
+        titleSmall = base.titleSmall.vga(),
+        bodyLarge = base.bodyLarge.vga(),
+        bodyMedium = base.bodyMedium.vga(),
+        bodySmall = base.bodySmall.vga(),
+        labelLarge = base.labelLarge.vga(),
+        labelMedium = base.labelMedium.vga(),
+        labelSmall = base.labelSmall.vga(),
     )
 }

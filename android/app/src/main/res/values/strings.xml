@@ -760,6 +760,8 @@
     <string name="companion_wake_on">Associated · Android wakes NectarLink when your PC is nearby</string>
     <string name="companion_wake_off">Associate your PC so Android wakes NectarLink when its BLE beacon is in range</string>
     <string name="companion_wake_associate">Associate</string>
+    <string name="proximity_routine_title">Proximity routine</string>
+    <string name="proximity_routine_hint">Stay connected to %1$s only while its Bluetooth is near: disconnects when you walk away, reconnects when you\'re back</string>
 
     <!-- Flick to Send sheet -->
 
