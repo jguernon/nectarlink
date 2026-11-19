@@ -50,8 +50,69 @@ impl Geometry {
     }
 }
 
-/// Renders the mark as straight-alpha RGBA, row by row, `size`×`size`.
+include!("mark_ega.rs");
+
+/// Renders the app's icon as straight-alpha RGBA, row by row, `size`×`size`.
+/// This fork draws the EGA icon (`assets/brand/ega/icon-ega.svg`); the
+/// Waggle Dance stays in [`render_waggle`].
 pub fn render(size: usize) -> Vec<u8> {
+    render_ega(size)
+}
+
+/// The EGA icon: the black tile with its gray rim, then the rectangles of
+/// `mark_ega.rs` in order, supersampled for clean edges at any size.
+pub fn render_ega(size: usize) -> Vec<u8> {
+    const SAMPLES: usize = 6;
+    let unit = 64.0 / size as f32;
+    let corner = |x: f32, y: f32, (inset, r): (f32, f32)| {
+        let (lo, hi) = (inset + r, 64.0 - inset - r);
+        if x < inset || y < inset || x > 64.0 - inset || y > 64.0 - inset {
+            return false;
+        }
+        let qx = x.clamp(lo, hi) - x;
+        let qy = y.clamp(lo, hi) - y;
+        qx * qx + qy * qy <= r * r
+    };
+    let mut out = vec![0u8; size * size * 4];
+    for py in 0..size {
+        for px in 0..size {
+            let mut color = [0f32; 3];
+            let mut covered = 0usize;
+            for sy in 0..SAMPLES {
+                for sx in 0..SAMPLES {
+                    let x = (px as f32 + (sx as f32 + 0.5) / SAMPLES as f32) * unit;
+                    let y = (py as f32 + (sy as f32 + 0.5) / SAMPLES as f32) * unit;
+                    if !corner(x, y, EGA_TILE_OUT) {
+                        continue;
+                    }
+                    covered += 1;
+                    let mut paint = if corner(x, y, EGA_TILE_IN) { 0x000000 } else { 0x555555 };
+                    for &(rx, ry, rw, rh, c) in &EGA_RECTS {
+                        if x >= rx && x < rx + rw && y >= ry && y < ry + rh {
+                            paint = c;
+                        }
+                    }
+                    color[0] += ((paint >> 16) & 0xFF) as f32;
+                    color[1] += ((paint >> 8) & 0xFF) as f32;
+                    color[2] += (paint & 0xFF) as f32;
+                }
+            }
+            if covered == 0 {
+                continue;
+            }
+            let i = (py * size + px) * 4;
+            for c in 0..3 {
+                out[i + c] = (color[c] / covered as f32).round() as u8;
+            }
+            out[i + 3] = ((covered as f32 / (SAMPLES * SAMPLES) as f32) * 255.0).round() as u8;
+        }
+    }
+    out
+}
+
+/// The upstream mark, the Waggle Dance.
+#[allow(dead_code)]
+pub fn render_waggle(size: usize) -> Vec<u8> {
     let g = Geometry::for_size(size);
     let unit = 100.0 / size as f32;
     let left = polyline(&LEFT_LOOP);
@@ -173,9 +234,20 @@ mod tests {
     }
 
     #[test]
-    fn corners_are_transparent_and_the_drop_sits_in_the_middle() {
+    fn ega_icon_has_its_tile_band_and_frame() {
         let size = 64;
         let img = render(size);
+        assert_eq!(pixel(&img, size, 0, 0)[3], 0, "rounded corner");
+        assert_eq!(pixel(&img, size, 20, 12), [0xFF, 0xFF, 0x55, 255], "yellow title");
+        assert_eq!(pixel(&img, size, 40, 9), [0x00, 0x00, 0xAA, 255], "blue band");
+        assert_eq!(pixel(&img, size, 32, 4), [0, 0, 0, 255], "black tile");
+        assert_eq!(pixel(&img, size, 32, 1)[0..3], [0x55, 0x55, 0x55], "gray rim");
+    }
+
+    #[test]
+    fn corners_are_transparent_and_the_drop_sits_in_the_middle() {
+        let size = 64;
+        let img = render_waggle(size);
         assert_eq!(img.len(), size * size * 4);
         assert_eq!(pixel(&img, size, 0, 0)[3], 0, "rounded corner");
         let middle = pixel(&img, size, 32, 32);
@@ -188,7 +260,7 @@ mod tests {
     #[test]
     fn both_loops_are_drawn() {
         let size = 128;
-        let img = render(size);
+        let img = render_waggle(size);
         let light = |p: [u8; 4]| p[0] > 0xF0 && p[3] == 255;
         // Somewhere left and right of the drop there's loop ink.
         let left = (8..56).any(|x| light(pixel(&img, size, x, 64)) || light(pixel(&img, size, x, 70)));

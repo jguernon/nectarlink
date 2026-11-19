@@ -86,12 +86,15 @@ done
 install -m 0644 "${SCRIPT_DIR}/nectarlink.desktop" "${PKG_ROOT}/usr/share/applications/nectarlink.desktop"
 install -m 0644 "${SCRIPT_DIR}/org.nectarlink.desktop.metainfo.xml" "${PKG_ROOT}/usr/share/metainfo/org.nectarlink.desktop.metainfo.xml"
 
-if [[ -f "${REPO_ROOT}/assets/brand/icon-512.png" ]]; then
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon-512.png" "${PKG_ROOT}/usr/share/icons/hicolor/512x512/apps/nectarlink.png"
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon-512.png" "${PKG_ROOT}/usr/share/icons/hicolor/256x256/apps/nectarlink.png"
+# This fork ships the EGA icon (assets/brand/ega, made by make-icon.py).
+ICON_PNG="${REPO_ROOT}/assets/brand/ega/icon-ega-512.png"
+ICON_SVG="${REPO_ROOT}/assets/brand/ega/icon-ega.svg"
+if [[ -f "${ICON_PNG}" ]]; then
+    install -m 0644 "${ICON_PNG}" "${PKG_ROOT}/usr/share/icons/hicolor/512x512/apps/nectarlink.png"
+    install -m 0644 "${ICON_PNG}" "${PKG_ROOT}/usr/share/icons/hicolor/256x256/apps/nectarlink.png"
 fi
-if [[ -f "${REPO_ROOT}/assets/brand/icon.svg" ]]; then
-    install -m 0644 "${REPO_ROOT}/assets/brand/icon.svg" "${PKG_ROOT}/usr/share/icons/hicolor/scalable/apps/nectarlink.svg"
+if [[ -f "${ICON_SVG}" ]]; then
+    install -m 0644 "${ICON_SVG}" "${PKG_ROOT}/usr/share/icons/hicolor/scalable/apps/nectarlink.svg"
 fi
 
 QT_DEPENDS=""
