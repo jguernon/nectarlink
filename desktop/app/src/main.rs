@@ -750,7 +750,16 @@ fn main() -> ExitCode {
     } else {
         bridge::native::ffi::prepare_qt(&logging::logs_dir(&data_dir).to_string_lossy());
     }
-    bridge::native::ffi::set_ui_scale(i32::from(settings::Settings::load(&data_dir).ui_scale));
+    let startup_settings = settings::Settings::load(&data_dir);
+    bridge::native::ffi::set_ui_scale(i32::from(startup_settings.ui_scale));
+    // Custom themes (EGA) draw 1 px frames. At a fractional scale (125 %),
+    // or on a 100 % screen next to a 125 % one, the compositor resamples the
+    // window and those lines fade or vanish: draw at a whole-number scale.
+    // `QT_SCALE_FACTOR_ROUNDING_POLICY` set by hand wins.
+    #[cfg(target_os = "linux")]
+    if !startup_settings.custom_theme.is_empty() {
+        bridge::native::ffi::use_whole_pixel_scale();
+    }
     #[cfg(any(target_os = "linux", target_os = "macos"))]
     let mut app = bridge::native::ffi::create_qt_app();
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]

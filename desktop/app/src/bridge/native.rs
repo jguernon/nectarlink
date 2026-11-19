@@ -33,6 +33,9 @@ pub mod ffi {
         /// Draws the app at `percent` of its normal size. Before the app object is
         /// made. `QT_SCALE_FACTOR` set by hand wins.
         fn set_ui_scale(percent: i32);
+        /// Draws at a whole-number scale (rounds 125 % to 100 %), so 1 px
+        /// lines stay sharp. Before the app object is made.
+        fn use_whole_pixel_scale();
         /// How many QML warnings and errors there were since
         /// `prepare_qt_for_ui_check`.
         fn qml_problem_count() -> i32;

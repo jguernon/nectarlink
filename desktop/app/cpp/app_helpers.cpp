@@ -177,6 +177,12 @@ void set_ui_scale(int32_t percent)
         qputenv("QT_SCALE_FACTOR", QByteArray::number(percent / 100.0));
 }
 
+void use_whole_pixel_scale()
+{
+    if (!qEnvironmentVariableIsSet("QT_SCALE_FACTOR_ROUNDING_POLICY"))
+        qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", "Round");
+}
+
 void prepare_qt_for_ui_check()
 {
     qInstallMessageHandler(uiCheckMessageHandler);

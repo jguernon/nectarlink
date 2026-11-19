@@ -755,17 +755,19 @@ Item {
                         }
                         height: heroCard.wide ? 156 : 142
                         width: Math.round(height * aspect)
-                        readonly property real bezel: 3.5
+                        readonly property real bezel: Theme.squareImages ? 3 : 3.5
                         readonly property real innerW: Math.max(10, width - bezel * 2)
                         readonly property real innerH: Math.max(20, height - bezel * 2)
                         readonly property real defaultCorner: width * 0.14
-                        readonly property real rTl: home.screenData && home.screenData.corners
+                        // Square themes (EGA): a square phone with 1 px lines on whole pixels.
+                        readonly property bool square: Theme.squareImages
+                        readonly property real rTl: square ? 0 : home.screenData && home.screenData.corners
                             ? Math.max(3, home.screenData.corners.tl * width) : defaultCorner
-                        readonly property real rTr: home.screenData && home.screenData.corners
+                        readonly property real rTr: square ? 0 : home.screenData && home.screenData.corners
                             ? Math.max(3, home.screenData.corners.tr * width) : defaultCorner
-                        readonly property real rBr: home.screenData && home.screenData.corners
+                        readonly property real rBr: square ? 0 : home.screenData && home.screenData.corners
                             ? Math.max(3, home.screenData.corners.br * width) : defaultCorner
-                        readonly property real rBl: home.screenData && home.screenData.corners
+                        readonly property real rBl: square ? 0 : home.screenData && home.screenData.corners
                             ? Math.max(3, home.screenData.corners.bl * width) : defaultCorner
                         readonly property var phonePalette: Theme.phonePalette(home.deviceId)
                         // Hive keeps its own honey here too, whatever the phone's colors.
@@ -840,11 +842,13 @@ Item {
 
                             // 1. Outer front chassis outline with measured per-corner radii.
                             ShapePath {
-                                strokeWidth: 1.5
-                                strokeColor: phoneArt.frameStroke
+                                strokeWidth: phoneArt.square ? 1 : 1.5
+                                strokeColor: phoneArt.square ? Theme.outline : phoneArt.frameStroke
                                 fillColor: phoneArt.frameFill
                                 PathSvg {
-                                    path: page.roundedRectSvg(
+                                    path: phoneArt.square
+                                        ? page.roundedRectSvg(0.5, 0.5, phoneArt.width - 1, phoneArt.height - 1, 0, 0, 0, 0)
+                                        : page.roundedRectSvg(
                                         0.75, 0.75,
                                         phoneArt.width - 1.5, phoneArt.height - 1.5,
                                         phoneArt.rTl, phoneArt.rTr, phoneArt.rBr, phoneArt.rBl
@@ -862,7 +866,9 @@ Item {
                                     GradientStop { position: 1.0; color: phoneArt.screenBottom }
                                 }
                                 PathSvg {
-                                    path: page.roundedRectSvg(
+                                    path: phoneArt.square
+                                        ? page.roundedRectSvg(phoneArt.bezel, phoneArt.bezel, phoneArt.innerW, phoneArt.innerH, 0, 0, 0, 0)
+                                        : page.roundedRectSvg(
                                         phoneArt.bezel, phoneArt.bezel,
                                         phoneArt.innerW, phoneArt.innerH,
                                         Math.max(2, phoneArt.rTl - phoneArt.bezel),
@@ -1000,6 +1006,8 @@ Item {
                                 height: 46
                                 anchors.horizontalCenter: parent.horizontalCenter
 
+                                visible: !phoneArt.square
+
                                 // Frosted circular glass dial well
                                 Rectangle {
                                     anchors.fill: parent
@@ -1066,6 +1074,46 @@ Item {
                                 }
                             }
 
+                            // Square themes (EGA): the level in big letters over a bar of
+                            // ten blocks, like a DOS gauge, instead of the round ring.
+                            Column {
+                                visible: phoneArt.square
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                spacing: 3
+                                Row {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    spacing: 3
+                                    Icon {
+                                        visible: home.charging
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: 9; height: 9
+                                        stroke: 1.9
+                                        path: Icons.bolt
+                                        color: inPhoneBatteryWidget.ringAccentColor
+                                    }
+                                    Txt {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        size: 16
+                                        color: inPhoneBatteryWidget.ringAccentColor
+                                        text: home.battery + "%"
+                                    }
+                                }
+                                Row {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    spacing: 1
+                                    Repeater {
+                                        model: 10
+                                        Rectangle {
+                                            required property int index
+                                            width: 3; height: 7
+                                            color: index < Math.round(Math.max(0, Math.min(100, home.battery)) / 10)
+                                                ? inPhoneBatteryWidget.ringAccentColor
+                                                : Theme.outlineVariant
+                                        }
+                                    }
+                                }
+                            }
+
                             // Only show a pill below the battery ring when actively charging or low battery (never redundant LTE/Battery text)
                             Rectangle {
                                 visible: statusMiniLabel.text.length > 0
@@ -1073,9 +1121,9 @@ Item {
                                 height: 13
                                 width: Math.min(phoneArt.innerW - 6, Math.max(34, statusMiniLabel.implicitWidth + 10))
                                 radius: Theme.corner(6.5)
-                                color: Qt.rgba(0, 0, 0, Theme.graphite && !Theme.dark ? 0.10 : 0.26)
-                                border.width: 0.6
-                                border.color: Qt.rgba(1, 1, 1, 0.14)
+                                color: phoneArt.square ? "transparent" : Qt.rgba(0, 0, 0, Theme.graphite && !Theme.dark ? 0.10 : 0.26)
+                                border.width: phoneArt.square ? 1 : 0.6
+                                border.color: phoneArt.square ? Theme.outlineVariant : Qt.rgba(1, 1, 1, 0.14)
 
                                 Txt {
                                     id: statusMiniLabel
